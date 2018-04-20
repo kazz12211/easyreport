@@ -1,0 +1,49 @@
+{
+	"Index" : {
+		"Inbox" : "受信",
+		"Outbox" : "送信",
+		"Stag" : "区分",
+		"MinIssueDate" : "発行日（開始）",
+		"MaxIssueDate" : "発行日（終了）",
+		"CreatedAfter" : "作成日（開始）",
+		"CreatedBefore" : "作成日（終了）",
+		"State" : "ステータス",
+		"Pending" : "保留中",
+		"Invoiced" : "請求済",
+		"Overdue" : "期限切れ",
+		"Accepted" : "受領済",
+		"Paid" : "支払済",
+		"Rejected" : "却下済",
+		"Disputed" : "交渉中",
+		"Search" : "検索",
+		"ClearForm" : "検索条件クリア",
+		"Test" : "テスト",
+		"Download" : "ダウンロード"
+	},
+	"Tab" : {
+		"Invoice" : "請求書"
+	},
+	"Stag" : {
+		"Inbox" : "受信",
+		"Outbox" : "送信"
+	},
+	"ProcessState" : {
+		"Pending" : "保留中",
+		"Invoiced" : "請求済",
+		"Overdue" : "期限切れ",
+		"Accepted" : "受領済",
+		"Paid" : "支払済",
+		"Rejected" : "却下済",
+		"Disputed" : "交渉中"
+	},
+	"Table" : {
+		"ID" : "ID",
+		"ReceiverCompany" : "請求先企業",
+		"SenderCompany" : "請求元企業",
+		"Description" : "内容",
+		"Total" : "合計金額",
+		"Currency" : "通過",
+		"IssueDate" : "発行日",
+		"State" : "ステータス"
+	}
+}

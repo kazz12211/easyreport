@@ -1,0 +1,49 @@
+{
+	"Index" : {
+		"Inbox" : "Inbox",
+		"Outbox" : "Outbox",
+		"Stag" : "STag",
+		"MinIssueDate" : "Min Issue Date",
+		"MaxIssueDate" : "Max Issue Date",
+		"CreatedAfter" : "Created After",
+		"CreatedBefore" : "Created Before",
+		"State" : "State",
+		"Pending" : "Pending",
+		"Invoiced" : "Invoiced",
+		"Overdue" : "Overdue",
+		"Accepted" : "Accepted",
+		"Paid" : "Paid",
+		"Rejected" : "Rejected",
+		"Disputed" : "Disputed",
+		"Search" : "Search",
+		"ClearForm" : "Clear Form",
+		"Test" : "Test",
+		"Download" : "Download"
+	},
+	"Tab" : {
+		"Invoice" : "Invoice"
+	},
+	"Stag" : {
+		"Inbox" : "Inbox",
+		"Outbox" : "Outbox"
+	},
+	"ProcessState" : {
+		"Pending" : "Pending",
+		"Invoiced" : "Invoiced",
+		"Overdue" : "Overdue",
+		"Accepted" : "Accepted",
+		"Paid" : "Paid",
+		"Rejected" : "Rejected",
+		"Disputed" : "Disputed"
+	},
+	"Table" : {
+		"ID" : "ID",
+		"ReceiverCompany" : "Receiver Company",
+		"SenderCompany" : "Sender Company",
+		"Description" : "Description",
+		"Total" : "Total",
+		"Currency" : "Currency",
+		"IssueDate" : "Issue Date",
+		"State" : "State"
+	}
+}
