@@ -87,12 +87,12 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				var predicates = buildPredicates();
 				
 				$q.all([$req.searchInvoices(predicates)])
-				.then(function(response) {
-					console.log(response);
-					var contentType = response.headers('Content-Type');
+				.then(function(response[0]) {
+					console.log(response[0]);
+					var contentType = response[0].headers('Content-Type');
 					console.log('Content-Type: ' + contentType);
-					if(response.status == 200 && contentType.indexOf('application/json') >= 0) {
-						if(response.data.length == 0) {
+					if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
+						if(response[0].data.length == 0) {
 							$scope.pop.info("No records found match the criteria.");
 						}
 						$scope.invoices = response[0].data;
