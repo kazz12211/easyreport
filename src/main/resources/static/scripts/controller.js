@@ -86,7 +86,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.submitForm = function() {
 				var predicates = buildPredicates();
 				
-				$req.searchInvoices(predicates)
+				$q.all([$req.searchInvoices(predicates)])
 				.then(function(response) {
 					console.log(response);
 					var contentType = response.headers('Content-Type');
@@ -95,7 +95,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 						if(response.data.length == 0) {
 							$scope.pop.info("No records found match the criteria.");
 						}
-						$scope.invoices = response.data;
+						$scope.invoices = response[0].data;
 						$scope.selectedRows = [];
 						populateInvoiceTable();
 					} else {
