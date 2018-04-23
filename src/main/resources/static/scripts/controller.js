@@ -124,7 +124,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				$scope.invoices = [];
 				$scope.selectedRows = [];
 				$scope.invoiceTable.rows([]);
-				$scope.$apply();
 			};
 			
 			$scope.download = function() {

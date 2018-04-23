@@ -19,7 +19,7 @@
 	<main data-ts="Main">
 	<div data-ts="MainContent">
 	<div id="tab0" ng-show="showTab == 0">
-		<form data-ts="Form" ng-submit="submitForm()">
+		<form data-ts="Form" >
 			<fieldset class="ts-multi">
 				<label for="stag">
 					<span translate="Index.Stag">Stag</span>
@@ -55,7 +55,7 @@
 				</label>
 			</fieldset>
 			<div style="padding:10px 10px;margin-right:0px">
-			<button data-ts="Button" class="ts-primary" type="submit">
+			<button data-ts="Button" class="ts-primary" ng-click="submitForm()">
 				<span translate="Index.Search">Search</span>
 			</button>
 			<button data-ts="Button" class="ts-secondary" ng-click="clearForm()">
