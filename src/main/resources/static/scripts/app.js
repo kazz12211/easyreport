@@ -38,10 +38,10 @@ app.factory('$req', function($http, $location) {
 	var url = $location.absUrl();
 	return {
 		searchInvoices : function(predicates) {
-			return $http.get(url + "/invoice/search", { params : predicates } );
+			return $http.get(url + "invoice/search", { params : predicates } );
 		},
 		downloadInvoice: function(docId) {
-			return $http.get(url + "/invoice/download", { params : {id : docId} });
+			return $http.get(url + "invoice/download", { params : {id : docId} });
 		},
 		test: function() {
 			return $http.get(url + "test");
