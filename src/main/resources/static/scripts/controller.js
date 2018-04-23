@@ -190,7 +190,5 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.rows(rows);
 		}
 		
-	/*	
 	});
-	*/
 });
