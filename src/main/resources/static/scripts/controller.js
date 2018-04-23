@@ -87,7 +87,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				var predicates = buildPredicates();
 				
 				$q.all([$req.searchInvoices(predicates)])
-				.then(function(response[0]) {
+				.then(function(response) {
 					console.log(response[0]);
 					var contentType = response[0].headers('Content-Type');
 					console.log('Content-Type: ' + contentType);
