@@ -54,7 +54,7 @@
 					<input type="date" ng-model="createdBefore" />
 				</label>
 			</fieldset>
-			<div style="padding:10px 10px;float:right">
+			<div style="padding:10px 10px;margin-right:0px">
 			<button data-ts="Button" class="ts-primary" type="submit">
 				<span translate="Index.Search">Search</span>
 			</button>
@@ -67,11 +67,6 @@
 			</div>
 		</form>
 		<div data-ts="Table" id="invoice-table"></div>
-		<div ng-show="selectedRows.length != 0">
-		<button data-ts="Button" class="ts-primary" ng-click="download()">
-			<span translate="Index.Download">Download</span>
-		</button>
-		</div>
 	</div>
 	</div>
 	</main>

@@ -75,6 +75,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			.selectable(function(selected, unselected) {
 				selectedRows = selected;
 			})
+			.buttons([
+				{label: locale["Index.Download"], type='ts-primary', onclick: () => {
+					$scope.download();
+				}}
+			]) 
 			.max(10).sort(0, true);
 			
 			$scope.submitForm = function() {
@@ -118,6 +123,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				$scope.invoices = [];
 				$scope.selectedRows = [];
 				$scope.invoiceTable.rows([]);
+				$scope.$apply();
 			};
 			
 			$scope.download = function() {
