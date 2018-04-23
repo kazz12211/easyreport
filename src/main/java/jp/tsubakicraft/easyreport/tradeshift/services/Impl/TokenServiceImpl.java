@@ -72,6 +72,8 @@ public class TokenServiceImpl implements TokenService {
         this.CLIENT_ID = propertySources.getClientID();
         this.REDIRECT_URI = propertySources.getRedirectUri();
         this.CLIENT_SECRET = propertySources.getClientSecret();
+        
+        System.out.println(this.CLIENT_ID + ":" + this.CLIENT_SECRET);
     }
 
     /**
