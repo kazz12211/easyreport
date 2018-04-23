@@ -23,7 +23,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		    $translate(["Tab.Invoice", 
 		                "Table.ID", "Table.ReceiverCompany", "Table.SenderCompany", "Table.Description", "Table.Total", "Table.Currency", "Table.IssueDate", "Table.State",
 		                "Stag.Inbox", "Stag.Outbox",
-		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed" ])        
+		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed",
+		                "Index.Download"])        
 		])
 		.then(function(response) {
 			var locale = response[0];
