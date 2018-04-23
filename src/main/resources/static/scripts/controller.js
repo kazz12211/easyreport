@@ -77,7 +77,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				selectedRows = selected;
 			})
 			.buttons([
-				{label: locale["Index.Download"], type='ts-primary', onclick: () => {
+				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
 					$scope.download();
 				}}
 			]) 
