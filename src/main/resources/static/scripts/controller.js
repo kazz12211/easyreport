@@ -1,4 +1,4 @@
-app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $window, $timeout/*, $translate*/) {
+app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $window, $timeout, $translate) {
 	$scope.ui = ts.ui;
 	
 	$scope.ui.ready(function() {
