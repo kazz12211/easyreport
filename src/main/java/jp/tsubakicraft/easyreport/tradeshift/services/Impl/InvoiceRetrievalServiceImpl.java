@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import jp.tsubakicraft.easyreport.tradeshift.config.PropertySources;
@@ -24,6 +25,7 @@ import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoiceDetailDTO;
 import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
 
+@Service
 public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 
 	static Logger LOGGER = LoggerFactory.getLogger(InvoiceRetrievalServiceImpl.class);
