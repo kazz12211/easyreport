@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
 
 @RestController
@@ -29,6 +30,8 @@ public class InvoiceController {
 	@Autowired
 	TokenService tokenService;
 	
+	@Autowired
+	InvoiceRetrievalService invoiceRetrievalService;
 	
 	@RequestMapping(value = "/invoice/search", method = RequestMethod.GET)
 	public ResponseEntity<?> searchInvoice(
@@ -46,7 +49,7 @@ public class InvoiceController {
 		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
-			List<?> result = new ArrayList();
+			List<?> result = invoiceRetrievalService.getInvoices(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
 			return new ResponseEntity(result, HttpStatus.OK);
 		} else {
 			LOGGER.info("failed to get list of invoice, access token doesn't exist.", InvoiceController.class);
