@@ -39,7 +39,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	@Autowired
 	public InvoiceRetrievalServiceImpl(@Qualifier("propertySources") PropertySources propertySources) {
 		super();
-		URI_LIST_DOCUMENTS = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents?type={documentType}";
+		URI_LIST_DOCUMENTS = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents";
 	}
 	
 	@Override
@@ -111,49 +111,32 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity requestEntity = 	tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_VALUE);
-		String url = buildUrl(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		builder.queryParam("documentType", documentType);
-		ResponseEntity<?> responseEntity = restTemplate.exchange(builder.build().toString(), HttpMethod.GET, requestEntity, String.class);
-		return responseEntity;
-	}
-
-	private String buildUrl(Integer limit, Integer page, String stag, String minIssueDate, String maxIssueDate,
-			String createdBefore, String createdAfter, String[] processStates) {
-		String url = URI_LIST_DOCUMENTS;
-		url += "&";
-		url += buildPredicateParams(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
-		LOGGER.info("Searching invoice: " + url);
-		return url;
-	}
-
-	private String buildPredicateParams(Integer limit, Integer page, String stag, String minIssueDate,
-			String maxIssueDate, String createdBefore, String createdAfter, String[] processStates) {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(String.format("%s=%s&", "limit", limit.toString()));
-		buffer.append(String.format("%s=%s&", "page", page.toString()));
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URI_LIST_DOCUMENTS);
+		builder.queryParam("type", documentType);
+		builder.queryParam("limit", limit);
+		builder.queryParam("page", page);
 		if(stag != null) {
-			buffer.append(String.format("%s=%s&", "stag", stag));
+			builder.queryParam("stag", stag);
 		}
 		if(minIssueDate != null) {
-			buffer.append(String.format("%s=%s&", "minissuedate", minIssueDate));
+			builder.queryParam("minissuedate", minIssueDate);
 		}
 		if(maxIssueDate != null) {
-			buffer.append(String.format("%s=%s&", "maxissuedate", maxIssueDate));
+			builder.queryParam("maxissuedate", maxIssueDate);
 		}
 		if(createdBefore != null) {
-			buffer.append(String.format("%s=%s&", "createdBefore", createdBefore));
+			builder.queryParam("createdBefore", createdBefore);
 		}
 		if(createdAfter != null) {
-			buffer.append(String.format("%s=%s&", "createdAfter", createdAfter));
+			builder.queryParam("createdAfter", createdAfter);
 		}
 		if(processStates != null && processStates.length > 0) {
 			for(String processState : processStates) {
-				buffer.append(String.format("%s=%s&", "processState", processState));
+				builder.queryParam("processState", processState);
 			}
 		}
-		buffer.setLength(buffer.length() - 1);
-		return buffer.toString();
+		ResponseEntity<?> responseEntity = restTemplate.exchange(builder.build().toString(), HttpMethod.GET, requestEntity, String.class);
+		return responseEntity;
 	}
 
 
