@@ -32,12 +32,10 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	TokenService tokenService;
 	
 	private final String URI_LIST_DOCUMENTS;
-	private PropertySources propertySources;
 	
 	@Autowired
 	public InvoiceRetrievalServiceImpl(@Qualifier("propertySources") PropertySources propertySources) {
 		super();
-		this.propertySources = propertySources;
 		URI_LIST_DOCUMENTS = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents?type={DocumentType}";
 	}
 	
