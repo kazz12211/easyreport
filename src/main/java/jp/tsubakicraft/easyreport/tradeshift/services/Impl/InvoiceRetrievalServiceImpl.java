@@ -135,7 +135,9 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 				builder.queryParam("processState", processState);
 			}
 		}
-		ResponseEntity<?> responseEntity = restTemplate.exchange(builder.build().toString(), HttpMethod.GET, requestEntity, String.class);
+		String url = builder.build().toString();
+		LOGGER.debug("Query: " + url);
+		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 		return responseEntity;
 	}
 
