@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import jp.tsubakicraft.easyreport.tradeshift.config.PropertySources;
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoiceDTO;
@@ -38,7 +39,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	@Autowired
 	public InvoiceRetrievalServiceImpl(@Qualifier("propertySources") PropertySources propertySources) {
 		super();
-		URI_LIST_DOCUMENTS = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents?type={DocumentType}";
+		URI_LIST_DOCUMENTS = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents?type={documentType}";
 	}
 	
 	@Override
@@ -109,9 +110,11 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 			String[] processStates) throws JSONException {
 		
 		RestTemplate restTemplate = new RestTemplate();
-		HttpEntity<String> requestEntity = buildRequest();
+		HttpEntity requestEntity = 	tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_VALUE);
 		String url = buildUrl(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
-		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Object.class, documentType);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		builder.queryParam("documentType", documentType);
+		ResponseEntity<?> responseEntity = restTemplate.exchange(builder.build().toString(), HttpMethod.GET, requestEntity, String.class);
 		return responseEntity;
 	}
 
@@ -153,15 +156,5 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		return buffer.toString();
 	}
 
-	private HttpEntity<String> buildRequest() {
-		HttpHeaders requestHeaders = new HttpHeaders();
-		List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
-		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
-		requestHeaders.add("Authorization", "Bearer " + tokenService.getAccessTokenFromContext().getValue());
-		requestHeaders.setAccept(acceptableMediaTypes);
-		requestHeaders.setCacheControl("no-cache");
-		HttpEntity<String> requestEntity = new HttpEntity<String>(requestHeaders);
-		return requestEntity;
-	}
 
 }
