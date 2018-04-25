@@ -49,8 +49,13 @@ public class InvoiceController {
 		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
-			List<?> result = invoiceRetrievalService.getInvoices(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
-			return new ResponseEntity(result, HttpStatus.OK);
+			try {
+				List<?> result = invoiceRetrievalService.getInvoices(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
+				return new ResponseEntity(result, HttpStatus.OK);
+			} catch (Exception e) {
+				LOGGER.error("Server error", e);
+				return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		} else {
 			LOGGER.info("failed to get list of invoice, access token doesn't exist.", InvoiceController.class);
 			response.sendRedirect(tokenService.getAuthorizationCodeURL());
