@@ -1,7 +1,10 @@
 package jp.tsubakicraft.easyreport.tradeshift.controllers;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,15 +36,24 @@ public class InvoiceController {
 	@Autowired
 	InvoiceRetrievalService invoiceRetrievalService;
 	
+	private static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss");
+	
+	private static String formatDate(Date date) {
+		if(date == null) {
+			return null;
+		}
+		return FORMAT.format(date);
+	}
+	
 	@RequestMapping(value = "/invoice/search", method = RequestMethod.GET)
 	public ResponseEntity<?> searchInvoice(
 			@RequestParam(value="limit") final Integer limit,
 			@RequestParam(value="page") final Integer page,
 			@RequestParam(value="stag", required=false) final String stag,
-			@RequestParam(value="minIssueDate", required=false) final String minIssueDate,
-			@RequestParam(value="maxIssueDate", required=false) final String maxIssueDate,
-			@RequestParam(value="createdAfter", required=false) final String createdAfter,
-			@RequestParam(value="createdBefore", required=false) final String createdBefore,
+			@RequestParam(value="minIssueDate", required=false) final Date minIssueDate,
+			@RequestParam(value="maxIssueDate", required=false) final Date maxIssueDate,
+			@RequestParam(value="createdAfter", required=false) final Date createdAfter,
+			@RequestParam(value="createdBefore", required=false) final Date createdBefore,
 			@RequestParam(value="processStates", required=false) final String[] processStates,
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
@@ -49,7 +61,7 @@ public class InvoiceController {
 		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
-			List<?> result = invoiceRetrievalService.getInvoices(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
+			List<?> result = invoiceRetrievalService.getInvoices(limit, page, stag, formatDate(minIssueDate), formatDate(maxIssueDate), formatDate(createdBefore), formatDate(createdAfter), processStates);
 			return new ResponseEntity(result, HttpStatus.OK);
 		} else {
 			LOGGER.info("failed to get list of invoice, access token doesn't exist.", InvoiceController.class);
