@@ -104,7 +104,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				
 			}, function(error) {
 				console.log(error);
-				$scope.pop.error(error.data.message);
+				$scope.pop.error(error.statusText);
 			});
 		};
 
@@ -129,7 +129,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				}
 			}, function(error) {
 				console.log(error);
-				$scope.pop.error(error.data.message);
+				$scope.pop.error(error.statusText);
 			});
 		};
 		
