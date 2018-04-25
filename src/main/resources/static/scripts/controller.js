@@ -8,14 +8,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		$scope.pop = ts.ui.Notification;
 		$scope.showTab = 0;
 		$scope.popup = ts.ui.Notification;
-		$scope.stag = "inbox";
-		$scope.minIssueDate = null;
-		$scope.maxIssueDate = null;
-		$scope.createdAfter = null;
-		$scope.createdBefore = null;
-		$scope.states = [];
-		$scope.limit = 10;
-		$scope.page = 0;
+		
+		$scope.queryParam = {stag: "inbox", minIssueDate: "", maxIssueDate: "", createdBefore: "", createdAfter: "", processStates: [], limit: 10, page: 0};
+		
 		$scope.invoices = [];
 		$scope.selectedRows = [];
 		
@@ -81,111 +76,62 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					$scope.download();
 				}}
 			]) 
-			.max(10).sort(0, true);
-			
-			$scope.submitForm = function() {
-				var predicates = buildPredicates();
-				
-				$q.all([$req.searchInvoices(predicates)])
-				.then(function(response) {
-					console.log(response[0]);
-					var contentType = response[0].headers('Content-Type');
-					console.log('Content-Type: ' + contentType);
-					if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
-						if(response[0].data.length == 0) {
-							$scope.pop.info("No records found match the criteria.");
-						}
-						$scope.invoices = response[0].data;
-						$scope.selectedRows = [];
-						populateInvoiceTable();
-					} else {
-						if(response.status != 200) {
-							$scope.pop.error('Failed to get response. HTTP Status: ' + response.status);
-						} else {
-							$scope.pop.error('Failed to get JSON response. Content-Type: ' + contentType);
-						}
-					}
-					
-				}, function(error) {
-					console.log(error);
-					$scope.pop.error(error.data.message);
-				});
-			}
-			
-			$scope.clearForm = function() {
-				$scope.stag = "inbox";
-				$scope.minIssueDate = null;
-				$scope.maxIssueDate = null;
-				$scope.createdAfter = null;
-				$scope.createdBefore = null;
-				$scope.states = [];
-				$scope.limit = 10;
-				$scope.page = 0;
-				$scope.invoices = [];
-				$scope.selectedRows = [];
-				$scope.invoiceTable.rows([]);
-			};
-			
-			$scope.download = function() {
-				$q.all([
-				        $req.downloadInvoice("1")
-				])
-				.then(function(response) {
-					console.log(response.data);			
-					if(response.status == 200) {
-						
-					} else {
-						$scope.pop.error(response.statusText);
-					}
-				}, function(error) {
-					console.log(error);
-					$scope.pop.error(error.data.message);
-				});
-			};
+			.max(10).sort(0, true);			
 			
 		});
 		
-		$scope.test = function() {
-			$req.test()
+		$scope.submitForm = function() {
+			
+			$q.all([$req.searchInvoices($scope.queryParam)])
 			.then(function(response) {
-				console.log(response);
+				console.log(response[0]);
+				var contentType = response[0].headers('Content-Type');
+				console.log('Content-Type: ' + contentType);
+				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
+					if(response[0].data.length == 0) {
+						$scope.pop.info("No records found match the criteria.");
+					}
+					$scope.invoices = response[0].data;
+					$scope.selectedRows = [];
+					populateInvoiceTable();
+				} else {
+					if(response.status != 200) {
+						$scope.pop.error('Failed to get response. HTTP Status: ' + response.status);
+					} else {
+						$scope.pop.error('Failed to get JSON response. Content-Type: ' + contentType);
+					}
+				}
+				
 			}, function(error) {
 				console.log(error);
+				$scope.pop.error(error.data.message);
 			});
-		}
+		};
+
+		$scope.clearForm = function() {
+			$scope.queryParam = {stag: "inbox", minIssueDate: "", maxIssueDate: "", createdBefore: "", createdAfter: "", states: [], limit: 10, page: 0};
+
+			$scope.invoices = [];
+			$scope.selectedRows = [];
+			$scope.invoiceTable.rows([]);
+		};
 		
-		function buildPredicates() {
-			
-			var predicates = { 
-					limit: $scope.limit,
-					page: $scope.page
-			};
-			
-			if($scope.stag) {
-				predicates.stag = $scope.stag;
-			}
-			if($scope.minIssueDate) {
-				predicates.minissuedate = $scope.minIssueDate;
-			}
-			if($scope.maxIssueDate) {
-				predicates.maxissuedate = $scope.maxIssueDate;
-			}
-			if($scope.createdBefore) {
-				predicates.createdBefore = $scope.createdBefore;
-			}
-			if($scope.createdAfter) {
-				predicates.createdAfter = $scope.createdAfter;
-			}
-			var vals = [];
-			for(var i = 0; i < $scope.states.length; i++) {
-				vals.push($scope.states[i]);
-			}
-			if(vals.length > 0) {
-				predicates.processState = vals;
-			}
-			
-			return predicates;
-		}
+		$scope.download = function() {
+			$q.all([
+			        $req.downloadInvoice("1")
+			])
+			.then(function(response) {
+				console.log(response.data);			
+				if(response.status == 200) {
+					
+				} else {
+					$scope.pop.error(response.statusText);
+				}
+			}, function(error) {
+				console.log(error);
+				$scope.pop.error(error.data.message);
+			});
+		};
 		
 		function populateInvoiceTable() {
 			var rows = [];

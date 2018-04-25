@@ -37,8 +37,8 @@ app.config(function($translateProvider) {
 app.factory('$req', function($http, $location) {
 	var url = $location.absUrl();
 	return {
-		searchInvoices : function(predicates) {
-			return $http.get(url + "invoice/search", { params : predicates } );
+		searchInvoices : function(queryParams) {
+			return $http.get(url + "invoice/search", { params : queryParams } );
 		},
 		downloadInvoice: function(docId) {
 			return $http.get(url + "invoice/download", { params : {id : docId} });

@@ -23,13 +23,13 @@
 			<fieldset class="ts-multi">
 				<label for="stag">
 					<span translate="Index.Stag">Stag</span>
-					<select id="stag" ng-model="stag">
+					<select ng-model="queryParam.stag">
 						<option ng-repeat="tag in stagOptions" value="{{tag.value}}">{{tag.text}}</option>
 					</select>
 				</label>
 				<label for="state">
 					<span translate="Index.State">State</span>
-					<select id="state" multiple ng-model="states">
+					<select multiple ng-model="queryParam.processStates">
 						<option ng-repeat="state in stateOptions" value="{{state.value}}">{{state.text}}</option>
 				</select>
 				</label>
@@ -37,21 +37,21 @@
 			<fieldset class="ts-multi">
 				<label for="issuedDateStart">
 					<span translate="Index.MinIssueDate">Issued Date (start)</span>
-					<input id="issuedDateStart" type="date" ng-model="minIssueDate" />
+					<input type="date" ng-model="queryParam.minIssueDate" />
 				</label>
 				<label for="issuedDateEnd">
 					<span translate="Index.MaxIssueDate">Issued Date (end)</span>
-					<input id="issuedDateEnd" type="date" ng-model="maxIssueDate" />
+					<input type="date" ng-model="queryParam.maxIssueDate" />
 				</label>
 			</fieldset>
 			<fieldset class="ts-multi">
 				<label for="createdDateStart">
 					<span translate="Index.CreatedAfter">Created Date (start)</span>
-					<input id="createdDateStart" type="date" ng-model="createdAfter" />
+					<input type="date" ng-model="queryParam.createdAfter" />
 				</label>
 				<label for="createdDateEnd">
 					<span translate="Index.CreatedBefore">Created Date (end)</span>
-					<input type="date" ng-model="createdBefore" />
+					<input type="date" ng-model="queryParam.createdBefore" />
 				</label>
 			</fieldset>
 			<div style="padding:10px 10px;margin-right:0px">
@@ -61,11 +61,6 @@
 			<button data-ts="Button" class="ts-secondary" ng-click="clearForm()">
 				<span translate="Index.ClearForm">Clear Form</span>
 			</button>
-			<!--
-			<button data-ts="Button" class="ts-secondary" ng-click="test()">
-				<span translate="Index.Test">Test</span>
-			</button>
-			-->
 			</div>
 		</form>
 		<div data-ts="Table" id="invoice-table"></div>
