@@ -118,16 +118,16 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		if(stag != null) {
 			builder.queryParam("stag", stag);
 		}
-		if(minIssueDate != null) {
+		if(minIssueDate != null && minIssueDate.length() > 0) {
 			builder.queryParam("minissuedate", minIssueDate);
 		}
-		if(maxIssueDate != null) {
+		if(maxIssueDate != null && maxIssueDate.length() > 0) {
 			builder.queryParam("maxissuedate", maxIssueDate);
 		}
-		if(createdBefore != null) {
+		if(createdBefore != null && createdBefore.length() > 0) {
 			builder.queryParam("createdBefore", createdBefore);
 		}
-		if(createdAfter != null) {
+		if(createdAfter != null && createdAfter.length() > 0) {
 			builder.queryParam("createdAfter", createdAfter);
 		}
 		if(processStates != null && processStates.length > 0) {

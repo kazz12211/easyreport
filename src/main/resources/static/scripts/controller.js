@@ -109,7 +109,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		};
 
 		$scope.clearForm = function() {
-			$scope.queryParam = {stag: "inbox", minIssueDate: "", maxIssueDate: "", createdBefore: "", createdAfter: "", states: [], limit: 10, page: 0};
+			$scope.queryParam = {stag: "inbox", minIssueDate: "", maxIssueDate: "", createdBefore: "", createdAfter: "", processStates: [], limit: 10, page: 0};
 
 			$scope.invoices = [];
 			$scope.selectedRows = [];
