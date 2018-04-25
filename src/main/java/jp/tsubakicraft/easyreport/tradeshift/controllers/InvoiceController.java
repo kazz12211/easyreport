@@ -36,7 +36,7 @@ public class InvoiceController {
 	@Autowired
 	InvoiceRetrievalService invoiceRetrievalService;
 	
-	private static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss");
+	private static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	
 	private static String formatDate(Date date) {
 		if(date == null) {
