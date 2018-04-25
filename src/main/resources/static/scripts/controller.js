@@ -118,7 +118,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		$scope.download = function() {
 			$q.all([
-			        $req.downloadInvoice("1")
+			    $req.downloadInvoice("1")
 			])
 			.then(function(response) {
 				console.log(response.data);			
