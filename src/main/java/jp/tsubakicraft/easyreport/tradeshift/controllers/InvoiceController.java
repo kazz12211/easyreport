@@ -42,7 +42,7 @@ public class InvoiceController {
 			@RequestParam(value="maxIssuedate", required=false) final String maxIssueDate,
 			@RequestParam(value="createdAfter", required=false) final String createdAfter,
 			@RequestParam(value="createdBefore", required=false) final String createdBefore,
-			@RequestParam(value="processState", required=false) final String[] processStates,
+			@RequestParam(value="processStates", required=false) final String[] processStates,
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
 		
