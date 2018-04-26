@@ -2,7 +2,6 @@ package jp.tsubakicraft.easyreport.tradeshift.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoicePageDTO;
 import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
 import jp.tsubakicraft.easyreport.util.DateTimeUtil;
@@ -52,7 +52,7 @@ public class InvoiceController {
 
 		if(tokenService.getAccessTokenFromContext() != null) {
 			try {
-				List<?> result = invoiceRetrievalService.getInvoices(
+				InvoicePageDTO result = invoiceRetrievalService.getInvoices(
 						limit, 
 						page, 
 						stag, 
