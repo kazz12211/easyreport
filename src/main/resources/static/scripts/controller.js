@@ -9,7 +9,16 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		$scope.showTab = 0;
 		$scope.popup = ts.ui.Notification;
 		
-		$scope.queryParam = {stag: "inbox", minIssueDate: "", maxIssueDate: "", createdBefore: "", createdAfter: "", processStates: [], limit: 10, page: 0, tzOffset: getTzOffset()};
+		$scope.queryParam = {
+			stag: "inbox", 
+			minIssueDate: "", 
+			maxIssueDate: "", 
+			createdBefore: "", 
+			createdAfter: "", 
+			processStates: [], 
+			limit: 10, 
+			page: 0
+		};
 		
 		$scope.invoices = [];
 		$scope.selectedRows = [];
@@ -109,7 +118,16 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		};
 
 		$scope.clearForm = function() {
-			$scope.queryParam = {stag: "inbox", minIssueDate: "", maxIssueDate: "", createdBefore: "", createdAfter: "", processStates: [], limit: 10, page: 0, tzOffset: getTzOffset()};
+			$scope.queryParam = {
+				stag: "inbox", 
+				minIssueDate: "", 
+				maxIssueDate: "", 
+				createdBefore: "", 
+				createdAfter: "", 
+				processStates: [], 
+				limit: 10, 
+				page: 0
+			};
 
 			$scope.invoices = [];
 			$scope.selectedRows = [];
@@ -142,10 +160,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.rows(rows);
 		}
 		
-		function getTzOffset() {
-			var date = new Date();
-			return (date.getHours() - date.getUTCHours() + 24) % 24;
-		}
 		
 	});
 });

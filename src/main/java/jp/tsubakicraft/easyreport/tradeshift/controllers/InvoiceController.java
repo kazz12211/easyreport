@@ -57,10 +57,10 @@ public class InvoiceController {
 						limit, 
 						page, 
 						stag, 
-						DateTimeUtil.toDateString(minIssueDate), 
-						DateTimeUtil.toDateString(maxIssueDate), 
-						DateTimeUtil.toDateTimeString(createdBefore), 
-						DateTimeUtil.toDateTimeString(createdAfter), 
+						DateTimeUtil.toDateString(minIssueDate, locale), 
+						DateTimeUtil.toDateString(maxIssueDate, locale), 
+						DateTimeUtil.toDateTimeString(createdBefore, locale), 
+						DateTimeUtil.toDateTimeString(createdAfter, locale), 
 						processStates);
 				return new ResponseEntity(result, HttpStatus.OK);
 			} catch (Exception e) {
