@@ -1,8 +1,10 @@
 package jp.tsubakicraft.easyreport.tradeshift.controllers;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -45,13 +47,15 @@ public class InvoiceController {
 			@RequestParam(value="createdAfter", required=false) final String createdAfter,
 			@RequestParam(value="createdBefore", required=false) final String createdBefore,
 			@RequestParam(value="processStates", required=false) final String[] processStates,
-			final TimeZone timeZone,
+			final Locale locale,
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
 		
-		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + timeZone , InvoiceController.class);
+		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + locale , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
+			Calendar cal = Calendar.getInstance(locale);
+			TimeZone timeZone = cal.getTimeZone();
 			try {
 				List<?> result = invoiceRetrievalService.getInvoices(
 						limit, 
