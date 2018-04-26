@@ -35,6 +35,9 @@ public final class DateTimeUtil {
 	}
 	
 	public static String dateString(Date date, TimeZone timeZone) {
+		System.out.println("TimeZone = " + timeZone);
+		System.out.println("date input = " + date);
+		System.out.println("date output = " + dateByAddingHours(date, timeZone.getRawOffset()));
 		return DATE_FORMAT.format(dateByAddingHours(date, timeZone.getRawOffset()));
 	}
 	
