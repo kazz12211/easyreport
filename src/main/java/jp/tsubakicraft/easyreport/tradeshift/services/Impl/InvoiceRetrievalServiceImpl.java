@@ -57,11 +57,12 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	}
 	
 	private List<InvoiceDTO> parseDocuments(ResponseEntity<?> responseEntity) {
-		LOGGER.info("Parsing invoices");
 		
+		LOGGER.info("Reponse body: " + responseEntity.getBody());
 		List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 		
 		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType() == MediaType.APPLICATION_JSON) {
+			LOGGER.info("Parsing invoices");
 			LinkedHashMap<String, Object> linkedMap = (LinkedHashMap<String, Object>) responseEntity.getBody();
 			int pageId = ((Integer) linkedMap.get("pageId")).intValue();
 			int itemCount = ((Integer) linkedMap.get("itemCount")).intValue();
