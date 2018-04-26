@@ -61,7 +61,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		LOGGER.info("Reponse body: " + responseEntity.getBody());
 		List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 		
-		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType() == MediaType.APPLICATION_JSON) {
+		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType() == MediaType.APPLICATION_JSON_VALUE) {
 			LOGGER.info("Parsing invoices");
 			LinkedHashMap<String, Object> linkedMap = (LinkedHashMap<String, Object>) responseEntity.getBody();
 			int pageId = ((Integer) linkedMap.get("pageId")).intValue();
