@@ -9,16 +9,18 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public final class DateTimeUtil {
-
-	private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 	
 	/**
 	 * input 2018-12-21T00:00:00.000Z
 	 * @param locale 
 	 */
-	public static Date toDate(String input) {
+	public static Date toDate(String input, Locale locale) {
+		Calendar cal = Calendar.getInstance(locale);
+		TimeZone tz = cal.getTimeZone();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+		format.setTimeZone(tz);
 		try {
-			Date date = FORMAT.parse(input);
+			Date date = format.parse(input);
 			return date;
 		} catch (ParseException e) {
 			System.err.println(e.getMessage());
