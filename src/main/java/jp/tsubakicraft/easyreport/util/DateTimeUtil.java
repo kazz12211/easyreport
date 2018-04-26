@@ -10,8 +10,6 @@ import java.util.TimeZone;
 
 public final class DateTimeUtil {
 
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-	private static final DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 	
 	/**
@@ -31,15 +29,17 @@ public final class DateTimeUtil {
 	public static String dateString(Date date, Locale locale) {
 		Calendar cal = Calendar.getInstance(locale);
 		TimeZone tz = cal.getTimeZone();
-		DATE_FORMAT.setTimeZone(tz);
-		return DATE_FORMAT.format(date);
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		format.setTimeZone(tz);
+		return format.format(date);
 	}
 	
 	public static String dateTimeString(Date date, Locale locale) {
 		Calendar cal = Calendar.getInstance(locale);
 		TimeZone tz = cal.getTimeZone();
-		DATETIME_FORMAT.setTimeZone(tz);
-		return DATETIME_FORMAT.format(date);
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		format.setTimeZone(tz);
+		return format.format(date);
 	}
 	
 	public static String toDateString(String input, Locale locale) {
