@@ -45,7 +45,7 @@ public final class DateTimeUtil {
 	}
 	
 	public static String toDateString(String input, Locale locale) {
-		Date d = toDate(input);
+		Date d = toDate(input, locale);
 		if(d != null) {
 			return dateString(d, locale);
 		}
@@ -53,7 +53,7 @@ public final class DateTimeUtil {
 	}
 	
 	public static String toDateTimeString(String input, Locale locale) {
-		Date d = toDate(input);
+		Date d = toDate(input, locale);
 		if(d != null) {
 			return dateTimeString(d, locale);
 		}
