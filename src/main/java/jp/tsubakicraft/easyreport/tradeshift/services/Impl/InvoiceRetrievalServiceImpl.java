@@ -91,7 +91,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 				JSONObject docType = doc.getJSONObject("DocumentType");
 				invoice.setType(docType.getString("type"));
 				JSONArray items = new JSONArray(doc.get("ItemInfos").toString());
-				for(int j = 0; i < items.length(); j++ ) {
+				for(int j = 0; j < items.length(); j++ ) {
 					JSONObject item = items.getJSONObject(j);
 					String type = item.getString("type");
 					if("document.currency".equals(type)) {
