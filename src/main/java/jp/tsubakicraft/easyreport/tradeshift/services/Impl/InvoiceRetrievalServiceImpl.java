@@ -59,9 +59,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	}
 	
 	private InvoicePageDTO parseDocuments(ResponseEntity<?> responseEntity) throws JSONException {
-		
-		LOGGER.info("Reponse body: " + responseEntity.getBody());
-		
+				
 		InvoicePageDTO page = new InvoicePageDTO(0, 0, 0, 0, null);
 
 		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON)) {

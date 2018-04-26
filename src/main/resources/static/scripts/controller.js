@@ -98,6 +98,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				var contentType = response[0].headers('Content-Type');
 				console.log('Content-Type: ' + contentType);
 				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
+					console.log(response[0].data);
 					$scope.invoicePage = response[0].data;
 					$scope.selectedRows = [];
 					populateInvoiceTable();
