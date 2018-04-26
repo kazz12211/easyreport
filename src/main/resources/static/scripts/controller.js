@@ -157,7 +157,16 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			var rows = [];
 			for(var i = 0; i < $scope.invoicePage.invoices.length; i++) {
 				var invoice = $scope.invoicePage.invoices[i];
-				rows.push([ invoice.id, invoice.receiverCompanyName, invoice.senderCompanyName, invoice.description, invoice.total, invoice.currency, invoice.issueDate, invoice.state]);
+				rows.push([
+					invoice.id || "", 
+					invoice.receiverCompanyName || "", 
+					invoice.senderCompanyName || "", 
+					invoice.description || "", 
+					invoice.total, 
+					invoice.currency || "", 
+					invoice.issueDate || "", 
+					invoice.state || ""
+				]);
 			}
 			$scope.invoiceTable.rows(rows);
 		}
