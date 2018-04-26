@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
+import jp.tsubakicraft.easyreport.util.DateTimeUtil;
 
 @RestController
 public class InvoiceController {
@@ -50,7 +51,15 @@ public class InvoiceController {
 
 		if(tokenService.getAccessTokenFromContext() != null) {
 			try {
-				List<?> result = invoiceRetrievalService.getInvoices(limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
+				List<?> result = invoiceRetrievalService.getInvoices(
+						limit, 
+						page, 
+						stag, 
+						DateTimeUtil.toDateString(minIssueDate), 
+						DateTimeUtil.toDateString(maxIssueDate), 
+						DateTimeUtil.toDateTimeString(createdBefore), 
+						DateTimeUtil.toDateTimeString(createdAfter), 
+						processStates);
 				return new ResponseEntity(result, HttpStatus.OK);
 			} catch (Exception e) {
 				LOGGER.error("Server error", e);
