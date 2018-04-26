@@ -44,10 +44,11 @@ public class InvoiceController {
 			@RequestParam(value="createdAfter", required=false) final String createdAfter,
 			@RequestParam(value="createdBefore", required=false) final String createdBefore,
 			@RequestParam(value="processStates", required=false) final String[] processStates,
+			@RequestParam(value="tzOffset", required=false) final String tzOffset,
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
 		
-		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates , InvoiceController.class);
+		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + tzOffset , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
 			try {
