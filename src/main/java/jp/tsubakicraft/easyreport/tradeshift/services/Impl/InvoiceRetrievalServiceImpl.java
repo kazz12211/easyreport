@@ -72,7 +72,8 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 			
 			List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 			
-			JSONArray docs =new JSONArray(json.get("Document").toString());
+			JSONArray docs = json.getJSONArray("Document");
+			//JSONArray docs = new JSONArray(json.get("Document").toString());
 	        for (int i = 0; i < docs.length(); i++) {
 	            JSONObject doc = docs.getJSONObject(i);
 				InvoiceDTO invoice = new InvoiceDTO();
@@ -88,7 +89,8 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 				invoice.setState(doc.getString("ProcessState"));
 				JSONObject docType = doc.getJSONObject("DocumentType");
 				invoice.setType(docType.getString("type"));
-				JSONArray items = new JSONArray(doc.get("ItemInfos").toString());
+				JSONArray items = doc.getJSONArray("ItemInfos");
+				//JSONArray items = new JSONArray(doc.get("ItemInfos").toString());
 				for(int j = 0; j < items.length(); j++ ) {
 					JSONObject item = items.getJSONObject(j);
 					String type = item.getString("type");
