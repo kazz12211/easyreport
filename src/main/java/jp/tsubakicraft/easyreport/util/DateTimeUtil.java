@@ -34,29 +34,26 @@ public final class DateTimeUtil {
 		return cal.getTime();
 	}
 	
-	public static String dateString(Date date, TimeZone timeZone) {
-		System.out.println("TimeZone = " + timeZone);
-		System.out.println("date input = " + date);
-		System.out.println("date output = " + dateByAddingHours(date, timeZone.getRawOffset()));
-		return DATE_FORMAT.format(dateByAddingHours(date, timeZone.getRawOffset()));
+	public static String dateString(Date date, int tzOffset) {
+		return DATE_FORMAT.format(dateByAddingHours(date, tzOffset));
 	}
 	
-	public static String dateTimeString(Date date, TimeZone timeZone) {
-		return DATETIME_FORMAT.format(dateByAddingHours(date, timeZone.getRawOffset()));
+	public static String dateTimeString(Date date, int tzOffset) {
+		return DATETIME_FORMAT.format(dateByAddingHours(date, tzOffset));
 	}
 	
-	public static String toDateString(String input, TimeZone timeZone) {
+	public static String toDateString(String input, int tzOffset) {
 		Date d = toDate(input);
 		if(d != null) {
-			return dateString(d, timeZone);
+			return dateString(d, tzOffset);
 		}
 		return null;
 	}
 	
-	public static String toDateTimeString(String input, TimeZone timeZone) {
+	public static String toDateTimeString(String input, int tzOffset) {
 		Date d = toDate(input);
 		if(d != null) {
-			return dateTimeString(d, timeZone);
+			return dateTimeString(d, tzOffset);
 		}
 		return null;
 	}

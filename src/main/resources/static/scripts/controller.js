@@ -17,7 +17,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			createdAfter: "", 
 			processStates: [], 
 			limit: 10, 
-			page: 0
+			page: 0,
+			tzOffset: getTzOffset()
 		};
 		
 		$scope.invoices = [];
@@ -126,7 +127,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				createdAfter: "", 
 				processStates: [], 
 				limit: 10, 
-				page: 0
+				page: 0,
+				tzOffset: getTzOffset()
 			};
 
 			$scope.invoices = [];
@@ -160,6 +162,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.rows(rows);
 		}
 		
+		function getTzOffset() {
+			var date = new Date();
+			return (date.getHours() - date.getUTCHours() + 24) % 24;
+		}
+	
 		
 	});
 });

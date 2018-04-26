@@ -47,24 +47,22 @@ public class InvoiceController {
 			@RequestParam(value="createdAfter", required=false) final String createdAfter,
 			@RequestParam(value="createdBefore", required=false) final String createdBefore,
 			@RequestParam(value="processStates", required=false) final String[] processStates,
-			final Locale locale,
+			@RequestParam(value="tzOffset", required=false) final int tzOffset,
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
 		
-		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + locale , InvoiceController.class);
+		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + tzOffset , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
-			Calendar cal = Calendar.getInstance(locale);
-			TimeZone timeZone = cal.getTimeZone();
 			try {
 				List<?> result = invoiceRetrievalService.getInvoices(
 						limit, 
 						page, 
 						stag, 
-						DateTimeUtil.toDateString(minIssueDate, timeZone), 
-						DateTimeUtil.toDateString(maxIssueDate, timeZone), 
-						DateTimeUtil.toDateTimeString(createdBefore, timeZone), 
-						DateTimeUtil.toDateTimeString(createdAfter, timeZone), 
+						DateTimeUtil.toDateString(minIssueDate, tzOffset), 
+						DateTimeUtil.toDateString(maxIssueDate, tzOffset), 
+						DateTimeUtil.toDateTimeString(createdBefore, tzOffset), 
+						DateTimeUtil.toDateTimeString(createdAfter, tzOffset), 
 						processStates);
 				return new ResponseEntity(result, HttpStatus.OK);
 			} catch (Exception e) {
