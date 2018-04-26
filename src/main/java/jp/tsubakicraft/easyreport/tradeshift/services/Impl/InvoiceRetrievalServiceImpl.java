@@ -5,7 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		return null;
 	}
 	
-	private InvoicePageDTO parseDocuments(ResponseEntity<?> responseEntity) {
+	private InvoicePageDTO parseDocuments(ResponseEntity<?> responseEntity) throws JSONException {
 		
 		LOGGER.info("Reponse body: " + responseEntity.getBody());
 		
@@ -64,37 +66,45 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 
 		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON)) {
 			LOGGER.info("Parsing invoices");
-			LinkedHashMap<String, Object> linkedMap = (LinkedHashMap<String, Object>) responseEntity.getBody();
-			int pageId = ((Integer) linkedMap.get("pageId")).intValue();
-			int itemCount = ((Integer) linkedMap.get("itemCount")).intValue();
-			int numPages = ((Integer) linkedMap.get("numPages")).intValue();
-			int itemsPerPage = ((Integer) linkedMap.get("itemsPerPage")).intValue();
+	        JSONObject json = new JSONObject((String) responseEntity.getBody());
+			int pageId = json.getInt("pageId");
+			int itemCount = json.getInt("itemCount");
+			int numPages = json.getInt("numPages");
+			int itemsPerPage = json.getInt("itemsPerPage");
 			
 			List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 			
-			List<Map> docs = (List<Map>) linkedMap.get("Document");
-			for(Map doc : docs) {
+			JSONArray docs =new JSONArray(json.get("Document").toString());
+	        for (int i = 0; i < docs.length(); i++) {
+	            JSONObject doc = docs.getJSONObject(i);
 				InvoiceDTO invoice = new InvoiceDTO();
-				invoice.setId((String) doc.get("ID"));
-				invoice.setDocumentId((String) doc.get("DocumentId"));
-				invoice.setDocumentURI((String) doc.get("URI"));
-				invoice.setReceiverCompanyName((String) doc.get("ReceiverCompanyName"));
-				invoice.setSenderCompanyName((String) doc.get("SenderCompanyName"));
-				invoice.setState((String) doc.get("ProcessState"));
-				invoice.setType((String) ((Map)doc.get("DocumentType")).get("type"));
-				List<Map> items = (List<Map>) doc.get("ItemInfos");
-				for(Map item : items) {
-					if("document.currency".equals(item.get("type"))) {
-						invoice.setCurrency((String) item.get("value"));
+				invoice.setId(doc.getString("ID"));
+				invoice.setDocumentId(doc.getString("DocumentId"));
+				invoice.setDocumentURI(doc.getString("URI"));
+				if(doc.has("ReceiverCompanyName")) {
+					invoice.setReceiverCompanyName(doc.getString("ReceiverCompanyName"));
+				}
+				if(doc.has("SenderCompanyName")) {
+					invoice.setSenderCompanyName(doc.getString("SenderCompanyName"));
+				}
+				invoice.setState(doc.getString("ProcessState"));
+				JSONObject docType = doc.getJSONObject("DocumentType");
+				invoice.setType(docType.getString("type"));
+				JSONArray items = new JSONArray(doc.get("ItemInfos").toString());
+				for(int j = 0; i < items.length(); j++ ) {
+					JSONObject item = items.getJSONObject(j);
+					String type = item.getString("type");
+					if("document.currency".equals(type)) {
+						invoice.setCurrency(item.getString("value"));
 					}
-					if("document.description".equals(item.get("type"))) {
-						invoice.setDescription((String) item.get("value"));
+					if("document.description".equals(type)) {
+						invoice.setDescription(item.getString("value"));
 					}
-					if("document.issuedate".equals(item.get("type"))) {
-						invoice.setIssueDate((String) item.get("value"));
+					if("document.issuedate".equals(type)) {
+						invoice.setIssueDate(item.getString("value"));
 					}
-					if("document.total".equals(item.get("type"))) {
-						invoice.setTotal(Float.valueOf((String) item.get("value")));
+					if("document.total".equals(type)) {
+						invoice.setTotal(Float.valueOf(item.getString("value")));
 					}
 				}
 				invoiceDTOs.add(invoice);
