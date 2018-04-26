@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import jp.tsubakicraft.easyreport.tradeshift.config.PropertySources;
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoiceDTO;
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoiceDetailDTO;
+import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoicePageDTO;
 import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
 
@@ -43,7 +43,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	}
 	
 	@Override
-	public List<InvoiceDTO> getInvoices(Integer limit, Integer page, String stag, String minIssueDate,
+	public InvoicePageDTO getInvoices(Integer limit, Integer page, String stag, String minIssueDate,
 			String maxIssueDate, String createdBefore, String createdAfter, String[] processStates)
 			throws JSONException {
 		ResponseEntity<?> responseEntity = getDocumentList("invoice", limit, page, stag, minIssueDate, maxIssueDate, createdBefore, createdAfter, processStates);
@@ -56,27 +56,32 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		return null;
 	}
 	
-	private List<InvoiceDTO> parseDocuments(ResponseEntity<?> responseEntity) {
+	private InvoicePageDTO parseDocuments(ResponseEntity<?> responseEntity) {
 		
 		LOGGER.info("Reponse body: " + responseEntity.getBody());
-		List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 		
-		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType() == MediaType.APPLICATION_JSON_VALUE) {
+		InvoicePageDTO page = new InvoicePageDTO(0, 0, 0, 0, null);
+
+		if(responseEntity.getStatusCode() == HttpStatus.OK && responseEntity.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON)) {
 			LOGGER.info("Parsing invoices");
 			LinkedHashMap<String, Object> linkedMap = (LinkedHashMap<String, Object>) responseEntity.getBody();
 			int pageId = ((Integer) linkedMap.get("pageId")).intValue();
 			int itemCount = ((Integer) linkedMap.get("itemCount")).intValue();
+			int numPages = ((Integer) linkedMap.get("numPages")).intValue();
+			int itemsPerPage = ((Integer) linkedMap.get("itemsPerPage")).intValue();
+			
+			List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 			
 			List<Map> docs = (List<Map>) linkedMap.get("Document");
 			for(Map doc : docs) {
 				InvoiceDTO invoice = new InvoiceDTO();
-				invoice.setPageId(pageId);
-				invoice.setItemCount(itemCount);
 				invoice.setId((String) doc.get("ID"));
+				invoice.setDocumentId((String) doc.get("DocumentId"));
+				invoice.setDocumentURI((String) doc.get("URI"));
 				invoice.setReceiverCompanyName((String) doc.get("ReceiverCompanyName"));
 				invoice.setSenderCompanyName((String) doc.get("SenderCompanyName"));
 				invoice.setState((String) doc.get("ProcessState"));
-				invoice.setType("invoice");
+				invoice.setType((String) ((Map)doc.get("DocumentType")).get("type"));
 				List<Map> items = (List<Map>) doc.get("ItemInfos");
 				for(Map item : items) {
 					if("document.currency".equals(item.get("type"))) {
@@ -94,9 +99,15 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 				}
 				invoiceDTOs.add(invoice);
 			}
+			page.setPageId(pageId);
+			page.setItemsPerPage(itemsPerPage);
+			page.setItemCount(itemCount);
+			page.setNumPages(numPages);
+			page.setInvoices(invoiceDTOs);
 		}
 		
-		return invoiceDTOs;
+		
+		return page;
 	}
 
 	private ResponseEntity<?> getDocumentList(

@@ -2,8 +2,6 @@ package jp.tsubakicraft.easyreport.tradeshift.domain.dto;
 
 public class InvoiceDTO {
 
-	private int pageId;
-	private int itemCount;
 	private String id;
 	private String receiverCompanyName;
 	private String senderCompanyName;
@@ -13,22 +11,9 @@ public class InvoiceDTO {
 	private String description;
 	private String issueDate;
 	private Float total;
+	private String documentId;
+	private String uri;
 
-	public int getPageId() {
-		return pageId;
-	}
-	
-	public void setPageId(int pageId) {
-		this.pageId = pageId;
-	}
-	
-	public int getItemCount() {
-		return itemCount;
-	}
-
-	public void setItemCount(int itemCount) {
-		this.itemCount = itemCount;
-	}
 
 	public String getId() {
 		return id;
@@ -99,6 +84,22 @@ public class InvoiceDTO {
 	
 	public void setTotal(Float total) {
 		this.total = total;
+	}
+
+	public String getDocumentId() {
+		return documentId;
+	}
+	
+	public void setDocumentId(String documentId) {
+		this.documentId = documentId;
+	}
+
+	public String getURI() {
+		return uri;
+	}
+	
+	public void setDocumentURI(String uri) {
+		this.uri = uri;
 	}
 
 }

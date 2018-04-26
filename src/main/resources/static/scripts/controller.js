@@ -21,7 +21,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			tzOffset: getTzOffset()
 		};
 		
-		$scope.invoices = [];
+		$scope.invoicePage = {};
 		$scope.selectedRows = [];
 		
 		$q.all([
@@ -98,12 +98,12 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				var contentType = response[0].headers('Content-Type');
 				console.log('Content-Type: ' + contentType);
 				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
-					if(response[0].data.length == 0) {
-						$scope.pop.info("No records found match the criteria.");
-					}
-					$scope.invoices = response[0].data;
+					$scope.invoicePage = response[0].data;
 					$scope.selectedRows = [];
 					populateInvoiceTable();
+					if(invoicePage.invoices.length == 0) {
+						$scope.pop.info("No records found match the criteria.");
+					}
 				} else {
 					if(response.status != 200) {
 						$scope.pop.error('Failed to get response. HTTP Status: ' + response.status);
@@ -131,7 +131,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				tzOffset: getTzOffset()
 			};
 
-			$scope.invoices = [];
+			$scope.invoicePage = {};
 			$scope.selectedRows = [];
 			$scope.invoiceTable.rows([]);
 		};
@@ -155,8 +155,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		function populateInvoiceTable() {
 			var rows = [];
-			for(var i = 0; i < $scope.invoices.length; i++) {
-				var invoice = $scope.invoices[i];
+			for(var i = 0; i < $scope.invoicePage.invoices.length; i++) {
+				var invoice = $scope.invoicePage.invoices[i];
 				rows.push([ invoice.id, invoice.receiverCompanyName, invoice.senderCompanyName, invoice.description, invoice.total, invoice.currency, invoice.issueDate, invoice.state]);
 			}
 			$scope.invoiceTable.rows(rows);
