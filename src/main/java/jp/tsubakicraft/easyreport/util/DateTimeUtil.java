@@ -23,7 +23,7 @@ public final class DateTimeUtil {
 		}
 		return null;
 	}
-
+	
 	public static String dateString(Date date) {
 		return DATE_FORMAT.format(date);
 	}

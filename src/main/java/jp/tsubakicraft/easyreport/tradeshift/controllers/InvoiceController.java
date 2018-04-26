@@ -3,6 +3,7 @@ package jp.tsubakicraft.easyreport.tradeshift.controllers;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,11 +45,11 @@ public class InvoiceController {
 			@RequestParam(value="createdAfter", required=false) final String createdAfter,
 			@RequestParam(value="createdBefore", required=false) final String createdBefore,
 			@RequestParam(value="processStates", required=false) final String[] processStates,
-			@RequestParam(value="tzOffset", required=false) final String tzOffset,
+			final Locale locale,
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
 		
-		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + tzOffset , InvoiceController.class);
+		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + locale , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
 			try {
