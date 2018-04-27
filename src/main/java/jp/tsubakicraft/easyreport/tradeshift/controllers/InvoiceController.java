@@ -16,9 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoicePageDTO;
 import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
