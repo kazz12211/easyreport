@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -131,6 +132,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<?> requestEntity = 	tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_VALUE);
+		requestEntity.getHeaders().add(HttpHeaders.ACCEPT_CHARSET, "utf-8");
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URI_LIST_DOCUMENTS);
 		builder.queryParam("type", documentType);
 		builder.queryParam("limit", limit);
