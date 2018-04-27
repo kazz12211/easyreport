@@ -131,7 +131,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 			String[] processStates) throws JSONException {
 		
 		RestTemplate restTemplate = new RestTemplate();
-		HttpEntity<?> requestEntity = 	tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON);
+		HttpEntity<?> requestEntity = 	tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_UTF8_VALUE);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URI_LIST_DOCUMENTS);
 		builder.queryParam("type", documentType);
 		builder.queryParam("limit", limit);
