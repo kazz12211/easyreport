@@ -1,5 +1,6 @@
 package jp.tsubakicraft.easyreport.tradeshift.services.Impl;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -158,6 +161,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		}
 		String url = builder.build().toString();
 		LOGGER.info("*********** \nQuery: " + url);
+		restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
 		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 		LOGGER.info("*********** \nResponse conent type: " + responseEntity.getHeaders().getContentType());
 		return responseEntity;
