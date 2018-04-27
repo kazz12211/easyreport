@@ -113,6 +113,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoicePage = {};
 			$scope.selectedRows = [];
 			$scope.invoiceTable.rows([]);
+			$scope.invoiceTable.pager({pages:0});
 		};
 		
 		$scope.download = function() {
