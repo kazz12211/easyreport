@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoicePageDTO;
@@ -35,6 +36,7 @@ public class InvoiceController {
 	
 	
 	@RequestMapping(value = "/invoice/search", method = RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	@ResponseBody
 	public ResponseEntity<?> searchInvoice(
 			@RequestParam(value="limit") final Integer limit,
 			@RequestParam(value="page") final Integer page,
