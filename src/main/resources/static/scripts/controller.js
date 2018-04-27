@@ -94,6 +94,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		$scope.submitForm = function() {
 			
 			$scope.queryParam.page = 0;
+			$scope.selectedRows = [];
 			searchInvoices();
 			
 		};
@@ -115,6 +116,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.selectedRows = [];
 			$scope.invoiceTable.rows([]);
 			$scope.invoiceTable.pager({pages:0});
+			$scope.invoiceTable.status('');
 		};
 		
 		$scope.download = function() {
@@ -142,7 +144,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				console.log('Content-Type: ' + contentType);
 				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
 					$scope.invoicePage = response[0].data;
-					$scope.selectedRows = [];
 					populateInvoiceTable();
 					if($scope.invoicePage.invoices.length == 0) {
 						$scope.pop.info("No records found match the criteria.");
@@ -176,13 +177,13 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					invoice.state || ""
 				]);
 			}
+			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows);
 			$scope.invoiceTable.pager({
 				pages: $scope.invoicePage.numPages,
 				page: $scope.invoicePage.pageId,
 				onselect: loadpage
 			});
-			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + locale["Table.RecordsHit"]);
 		}
 		
 		function loadpage(index) {
