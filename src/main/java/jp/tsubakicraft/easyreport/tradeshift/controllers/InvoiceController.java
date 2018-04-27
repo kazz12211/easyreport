@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,8 @@ import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
 import jp.tsubakicraft.easyreport.util.DateTimeUtil;
 
-@RestController
+@Controller
+@RequestMapping("/invoice")
 public class InvoiceController {
 
 	static Logger LOGGER = LoggerFactory.getLogger(InvoiceController.class);
@@ -35,7 +37,7 @@ public class InvoiceController {
 	InvoiceRetrievalService invoiceRetrievalService;
 	
 	
-	@RequestMapping(value = "/invoice/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ResponseEntity<?> searchInvoice(
 			@RequestParam(value="limit") final Integer limit,
 			@RequestParam(value="page") final Integer page,
@@ -49,7 +51,7 @@ public class InvoiceController {
 			final HttpServletResponse response
 			)  throws JSONException, IOException {
 		
-		LOGGER.info("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + tzOffset , InvoiceController.class);
+		LOGGER.debug("get list of invoices by : " + limit + ", " + page + ", " + stag + ", " + minIssueDate + ", " + maxIssueDate + ", " + createdAfter + ", " + createdBefore + ", " + processStates + ", " + tzOffset , InvoiceController.class);
 
 		if(tokenService.getAccessTokenFromContext() != null) {
 			try {
@@ -74,7 +76,7 @@ public class InvoiceController {
 		}
 	}
 
-	@RequestMapping(value = "/invoice/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public ResponseEntity<?> downloadInvoice(@RequestParam("id") String docId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("requestedDocId", docId);
