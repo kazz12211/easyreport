@@ -208,6 +208,7 @@ public class TokenServiceImpl implements TokenService {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", "Bearer " + getAccessTokenFromContext().getValue());
         requestHeaders.add(HttpHeaders.ACCEPT, mediaType.getType());
+        requestHeaders.add(HttpHeaders.ACCEPT_CHARSET, "utf-8");
 
         return new HttpEntity<>(requestHeaders);
     }
