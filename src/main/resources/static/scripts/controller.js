@@ -29,7 +29,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		                "Table.ID", "Table.ReceiverCompany", "Table.SenderCompany", "Table.Description", "Table.Total", "Table.Currency", "Table.IssueDate", "Table.State",
 		                "Stag.Inbox", "Stag.Outbox",
 		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed",
-		                "Index.Download"])        
+		                "Index.Download",
+		                "Table.RecordsHit"])        
 		])
 		.then(function(response) {
 			var locale = response[0];
@@ -181,6 +182,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				page: $scope.invoicePage.pageId,
 				onselect: loadpage
 			});
+			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + locale["Table.RecordsHit"]);
 		}
 		
 		function loadpage(index) {

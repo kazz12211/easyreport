@@ -44,6 +44,7 @@
 		"Total" : "Total",
 		"Currency" : "Currency",
 		"IssueDate" : "Issue Date",
-		"State" : "State"
+		"State" : "State",
+		"RecordsHit": "records hit"
 	}
 }

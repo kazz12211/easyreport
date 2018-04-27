@@ -44,6 +44,7 @@
 		"Total" : "合計金額",
 		"Currency" : "通貨",
 		"IssueDate" : "発行日",
-		"State" : "ステータス"
+		"State" : "ステータス",
+		"RecordsHit": "件がヒット"
 	}
 }
