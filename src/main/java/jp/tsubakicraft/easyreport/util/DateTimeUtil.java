@@ -5,8 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public final class DateTimeUtil {
 	
@@ -43,6 +41,9 @@ public final class DateTimeUtil {
 	}
 	
 	public static String toDateString(String input, int tzOffset) {
+		if(input == null || input.trim().length() == 0) {
+			return null;
+		}
 		Date d = toDate(input);
 		if(d != null) {
 			return dateString(d, tzOffset);
@@ -51,6 +52,9 @@ public final class DateTimeUtil {
 	}
 	
 	public static String toDateTimeString(String input, int tzOffset) {
+		if(input == null || input.trim().length() == 0) {
+			return null;
+		}
 		Date d = toDate(input);
 		if(d != null) {
 			return dateTimeString(d, tzOffset);
