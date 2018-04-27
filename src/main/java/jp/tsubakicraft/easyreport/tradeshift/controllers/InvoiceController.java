@@ -37,7 +37,7 @@ public class InvoiceController {
 	InvoiceRetrievalService invoiceRetrievalService;
 	
 	
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> searchInvoice(
 			@RequestParam(value="limit") final Integer limit,
 			@RequestParam(value="page") final Integer page,
