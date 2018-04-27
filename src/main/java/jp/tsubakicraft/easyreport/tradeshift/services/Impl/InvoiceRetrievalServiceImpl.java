@@ -159,6 +159,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		LOGGER.info("*********** \nQuery: " + url);
 		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 		LOGGER.info("*********** \nResponse conent type: " + responseEntity.getHeaders().getContentType());
+		LOGGER.info("*********** \nResponse char set: " + responseEntity.getHeaders().getAcceptCharset().get(0));
 		return responseEntity;
 	}
 
