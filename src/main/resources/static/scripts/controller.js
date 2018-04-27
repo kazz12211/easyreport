@@ -92,30 +92,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		$scope.submitForm = function() {
 			
-			$q.all([$req.searchInvoices($scope.queryParam)])
-			.then(function(response) {
-				console.log(response[0]);
-				var contentType = response[0].headers('Content-Type');
-				console.log('Content-Type: ' + contentType);
-				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
-					$scope.invoicePage = response[0].data;
-					$scope.selectedRows = [];
-					populateInvoiceTable();
-					if($scope.invoicePage.invoices.length == 0) {
-						$scope.pop.info("No records found match the criteria.");
-					}
-				} else {
-					if(response.status != 200) {
-						$scope.pop.error('Failed to get response. HTTP Status: ' + response.status);
-					} else {
-						$scope.pop.error('Failed to get JSON response. Content-Type: ' + contentType);
-					}
-				}
-				
-			}, function(error) {
-				console.log(error);
-				$scope.pop.error(error.statusText);
-			});
+			searchInvoices();
+			
 		};
 
 		$scope.clearForm = function() {
@@ -153,6 +131,33 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			});
 		};
 		
+		function searchInvoices() {
+			$q.all([$req.searchInvoices($scope.queryParam)])
+			.then(function(response) {
+				console.log(response[0]);
+				var contentType = response[0].headers('Content-Type');
+				console.log('Content-Type: ' + contentType);
+				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
+					$scope.invoicePage = response[0].data;
+					$scope.selectedRows = [];
+					populateInvoiceTable();
+					if($scope.invoicePage.invoices.length == 0) {
+						$scope.pop.info("No records found match the criteria.");
+					}
+				} else {
+					if(response.status != 200) {
+						$scope.pop.error('Failed to get response. HTTP Status: ' + response.status);
+					} else {
+						$scope.pop.error('Failed to get JSON response. Content-Type: ' + contentType);
+					}
+				}
+				
+			}, function(error) {
+				console.log(error);
+				$scope.pop.error(error.statusText);
+			});
+		}
+		
 		function populateInvoiceTable() {
 			var rows = [];
 			for(var i = 0; i < $scope.invoicePage.invoices.length; i++) {
@@ -169,6 +174,16 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				]);
 			}
 			$scope.invoiceTable.rows(rows);
+			$scope.invoiceTable.pager({
+				pages: $scope.invoicePage.numPages,
+				page: $scope.invoicePage.pageId,
+				onselect: loadpage
+			});
+		}
+		
+		function loadpage(index) {
+			$scope.queryParam.page = index;
+			searchInvoices();
 		}
 		
 		function getTzOffset() {
