@@ -132,7 +132,6 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		HttpEntity<?> requestEntity = 	tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_VALUE);
-		requestEntity.getHeaders().add(HttpHeaders.ACCEPT_CHARSET, "utf-8");
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URI_LIST_DOCUMENTS);
 		builder.queryParam("type", documentType);
 		builder.queryParam("limit", limit);
