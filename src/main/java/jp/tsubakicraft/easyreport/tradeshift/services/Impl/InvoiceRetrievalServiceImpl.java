@@ -73,7 +73,6 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 			List<InvoiceDTO> invoiceDTOs = new ArrayList<InvoiceDTO>();
 			
 			JSONArray docs = json.getJSONArray("Document");
-			//JSONArray docs = new JSONArray(json.get("Document").toString());
 	        for (int i = 0; i < docs.length(); i++) {
 	            JSONObject doc = docs.getJSONObject(i);
 				InvoiceDTO invoice = new InvoiceDTO();
@@ -90,7 +89,6 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 				JSONObject docType = doc.getJSONObject("DocumentType");
 				invoice.setType(docType.getString("type"));
 				JSONArray items = doc.getJSONArray("ItemInfos");
-				//JSONArray items = new JSONArray(doc.get("ItemInfos").toString());
 				for(int j = 0; j < items.length(); j++ ) {
 					JSONObject item = items.getJSONObject(j);
 					String type = item.getString("type");
@@ -160,6 +158,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		String url = builder.build().toString();
 		LOGGER.info("*********** \nQuery: " + url);
 		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+		LOGGER.info("*********** \nResponse conent type: " + responseEntity.getHeaders().getContentType());
 		return responseEntity;
 	}
 
