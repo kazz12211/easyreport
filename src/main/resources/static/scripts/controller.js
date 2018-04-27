@@ -92,6 +92,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		$scope.submitForm = function() {
 			
+			$scope.queryParam.page = 0;
 			searchInvoices();
 			
 		};
