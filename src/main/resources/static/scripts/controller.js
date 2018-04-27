@@ -59,15 +59,15 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			];
 			
 			$scope.invoiceTable.cols([{
-				label: locale["Table.ID"]
+				label: locale["Table.ID"], flex: 2
 			},{
 				label: locale["Table.ReceiverCompany"], flex: 2
 			}, {
 				label: locale["Table.SenderCompany"], flex: 2
 			}, {
-				label: locale["Table.Description"], flex: 3
+				label: locale["Table.Description"], flex: 2
 			}, {
-				label: locale["Table.Total"], type: "ts-number"
+				label: locale["Table.Total"], type: "ts-number", flex: 2
 			}, {
 				label: locale["Table.Currency"]
 			}, {
