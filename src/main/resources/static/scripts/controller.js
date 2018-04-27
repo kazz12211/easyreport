@@ -8,6 +8,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		$scope.pop = ts.ui.Notification;
 		$scope.showTab = 0;
 		$scope.popup = ts.ui.Notification;
+		$scope.locale;
 		
 		$scope.queryParam = {
 			stag: "inbox", 
@@ -34,6 +35,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		])
 		.then(function(response) {
 			var locale = response[0];
+			$scope.locale = locale;
 			
 			$scope.topbar.tabs([{
 				label: locale["Tab.Invoice"],
@@ -177,7 +179,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					invoice.state || ""
 				]);
 			}
-			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + locale["Table.RecordsHit"]);
+			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + $scope.locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows);
 			$scope.invoiceTable.pager({
 				pages: $scope.invoicePage.numPages,
