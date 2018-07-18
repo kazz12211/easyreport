@@ -4,9 +4,9 @@
 <meta name="viewport" content="width=device-width" />
 <meta charset="utf-8">
 <link rel="stylesheet" href="styles/main.css">
-<link rel="stylesheet" href="//d5wfroyti11sa.cloudfront.net/prod/client/ts-10.0.21.min.css"/>
+<link rel="stylesheet" href="//d5wfroyti11sa.cloudfront.net/prod/client/ts-10.0.25.min.css"/>
 <script
-	src="//d5wfroyti11sa.cloudfront.net/prod/client/ts-10.0.21.min.js"></script>
+	src="//d5wfroyti11sa.cloudfront.net/prod/client/ts-10.0.25.min.js"></script>
 <script src="webjars/angularjs/1.6.2/angular.js"></script>
 <script src="webjars/angular-translate/2.13.1/angular-translate.js"></script>
 <script
@@ -29,7 +29,7 @@
 				</label>
 				<label for="state">
 					<span translate="Index.State">State</span>
-					<select multiple ng-model="queryParam.processStates">
+					<select multiple ng-model="queryParam.processStates" id="stateOptions">
 						<option ng-repeat="state in stateOptions" value="{{state.value}}">{{state.text}}</option>
 				</select>
 				</label>

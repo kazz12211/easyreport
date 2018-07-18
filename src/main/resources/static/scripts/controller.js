@@ -119,6 +119,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.rows([]);
 			$scope.invoiceTable.pager({pages:0});
 			$scope.invoiceTable.status('');
+			$('#stateOptions option').prop('selected', false);
 		};
 		
 		$scope.download = function() {
