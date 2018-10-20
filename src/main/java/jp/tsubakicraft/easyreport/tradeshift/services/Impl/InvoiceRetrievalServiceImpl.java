@@ -2,9 +2,7 @@ package jp.tsubakicraft.easyreport.tradeshift.services.Impl;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,12 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -62,6 +58,40 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		return null;
 	}
 	
+	private InvoiceDTO parseDocument(JSONObject doc) throws JSONException {
+		InvoiceDTO invoice = new InvoiceDTO();
+		invoice.setId(doc.getString("ID"));
+		invoice.setDocumentId(doc.getString("DocumentId"));
+		invoice.setDocumentURI(doc.getString("URI"));
+		if(doc.has("ReceiverCompanyName")) {
+			invoice.setReceiverCompanyName(doc.getString("ReceiverCompanyName"));
+		}
+		if(doc.has("SenderCompanyName")) {
+			invoice.setSenderCompanyName(doc.getString("SenderCompanyName"));
+		}
+		invoice.setState(doc.getString("ProcessState"));
+		JSONObject docType = doc.getJSONObject("DocumentType");
+		invoice.setType(docType.getString("type"));
+		JSONArray items = doc.getJSONArray("ItemInfos");
+		for(int j = 0; j < items.length(); j++ ) {
+			JSONObject item = items.getJSONObject(j);
+			String type = item.getString("type");
+			if("document.currency".equals(type)) {
+				invoice.setCurrency(item.getString("value"));
+			}
+			if("document.description".equals(type)) {
+				invoice.setDescription(item.getString("value"));
+			}
+			if("document.issuedate".equals(type)) {
+				invoice.setIssueDate(item.getString("value"));
+			}
+			if("document.total".equals(type)) {
+				invoice.setTotal(Float.valueOf(item.getString("value")));
+			}
+		}
+		return invoice;
+	}
+	
 	private InvoicePageDTO parseDocuments(ResponseEntity<?> responseEntity) throws JSONException {
 				
 		InvoicePageDTO page = new InvoicePageDTO(0, 0, 0, 0, null);
@@ -79,37 +109,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 			JSONArray docs = json.getJSONArray("Document");
 	        for (int i = 0; i < docs.length(); i++) {
 	            JSONObject doc = docs.getJSONObject(i);
-				InvoiceDTO invoice = new InvoiceDTO();
-				invoice.setId(doc.getString("ID"));
-				invoice.setDocumentId(doc.getString("DocumentId"));
-				invoice.setDocumentURI(doc.getString("URI"));
-				if(doc.has("ReceiverCompanyName")) {
-					invoice.setReceiverCompanyName(doc.getString("ReceiverCompanyName"));
-				}
-				if(doc.has("SenderCompanyName")) {
-					invoice.setSenderCompanyName(doc.getString("SenderCompanyName"));
-				}
-				invoice.setState(doc.getString("ProcessState"));
-				JSONObject docType = doc.getJSONObject("DocumentType");
-				invoice.setType(docType.getString("type"));
-				JSONArray items = doc.getJSONArray("ItemInfos");
-				for(int j = 0; j < items.length(); j++ ) {
-					JSONObject item = items.getJSONObject(j);
-					String type = item.getString("type");
-					if("document.currency".equals(type)) {
-						invoice.setCurrency(item.getString("value"));
-					}
-					if("document.description".equals(type)) {
-						invoice.setDescription(item.getString("value"));
-					}
-					if("document.issuedate".equals(type)) {
-						invoice.setIssueDate(item.getString("value"));
-					}
-					if("document.total".equals(type)) {
-						invoice.setTotal(Float.valueOf(item.getString("value")));
-					}
-				}
-				invoiceDTOs.add(invoice);
+	            invoiceDTOs.add(parseDocument(doc));
 			}
 			page.setPageId(pageId);
 			page.setItemsPerPage(itemsPerPage);
