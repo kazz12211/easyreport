@@ -102,7 +102,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			]) 
 			.max(10).sort(0, true);	
 			
-			$scope.ui.Footer.status=locale["Param.FetchLimitIs"] + " " + $scope.fetchLimit + " " + locale["Param.Records"];
 			
 		});
 		
@@ -160,7 +159,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		function searchInvoices() {
 			var main = $('main').first();
-			main.attr('data-ts.busy', locale['Index.Searching']);
+			main.attr('data-ts.busy', $scope.locale['Index.Searching']);
 			$q.all([$req.searchInvoices($scope.queryParam)])
 			.then(function(response) {
 				main.attr('data-ts.busy', '');
