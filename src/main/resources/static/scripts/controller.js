@@ -31,11 +31,14 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		                "Stag.Inbox", "Stag.Outbox",
 		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed",
 		                "Index.Download",
-		                "Table.RecordsHit"])        
+		                "Table.RecordsHit"]),
+		    $req.getParams()
 		])
 		.then(function(response) {
 			var locale = response[0];
 			$scope.locale = locale;
+			$scope.fetchLimits = response[1];
+			$scope.fetchLimit = fetchLimits.invoice || 500;
 			
 			$scope.ui.Header.title('Easy Report');
 			$scope.topbar.tabs([{
@@ -110,7 +113,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				createdBefore: "", 
 				createdAfter: "", 
 				processStates: [], 
-				limit: 10, 
+				limit: $scope.fetchLimit, 
 				page: 0,
 				tzOffset: getTzOffset()
 			};
@@ -180,12 +183,14 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				]);
 			}
 			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + $scope.locale["Table.RecordsHit"]);
-			$scope.invoiceTable.rows(rows);
+			$scope.invoiceTable.rows(rows).max(10);
+			/*
 			$scope.invoiceTable.pager({
 				pages: $scope.invoicePage.numPages,
 				page: $scope.invoicePage.pageId,
 				onselect: loadpage
 			});
+			*/
 		}
 		
 		function loadpage(index) {

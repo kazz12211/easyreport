@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jp.tsubakicraft.easyreport.tradeshift.config.ApplicationProperties;
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.InvoicePageDTO;
 import jp.tsubakicraft.easyreport.tradeshift.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
@@ -33,6 +35,9 @@ public class InvoiceController {
 	@Autowired
 	InvoiceRetrievalService invoiceRetrievalService;
 	
+    @Autowired
+    protected ApplicationProperties applicationProperties;
+
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public ResponseEntity<?> searchInvoice(
