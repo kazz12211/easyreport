@@ -37,7 +37,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		.then(function(response) {
 			var locale = response[0];
 			$scope.locale = locale;
-			$scope.fetchLimits = response[1];
+			$scope.fetchLimits = response[1].data;
 			$scope.fetchLimit = fetchLimits.invoice || 500;
 			
 			$scope.ui.Header.title('Easy Report');
@@ -93,7 +93,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					$scope.download();
 				}}
 			]) 
-			.max(10).sort(0, true);			
+			.max(10).sort(0, true);	
+			
+			$scope.ui.Fotter.status="Fetch Limit = " + $scope.fetchLimit;
 			
 		});
 		
