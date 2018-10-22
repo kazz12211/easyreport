@@ -89,6 +89,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			.sortable(function(index, ascending) {
 				$scope.invoiceTable.sort(index, ascending);
 			})
+			.selectable()
 			.buttons([
 				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
 					$scope.download();
