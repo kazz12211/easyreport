@@ -97,7 +97,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			]) 
 			.max(10).sort(0, true);	
 			$scope.invoiceTable.onselect = function(selected, unselected) {
-				selectedRows = selected;
+				$scope.selectedRows = selected;
 				updateDownloadButton();
 			};
 			
