@@ -96,7 +96,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			]) 
 			.max(10).sort(0, true);	
 			
-			$scope.ui.Fotter.status="Fetch Limit = " + $scope.fetchLimit;
+			$scope.ui.Fotter.status=locale["Param.FetchLimitIs"] + " " + $scope.fetchLimit + " " + locale["Param.Records"];
 			
 		});
 		
