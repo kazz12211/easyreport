@@ -207,6 +207,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			*/
 		}
 		
+	
 		function loadpage(index) {
 			$scope.queryParam.page = index;
 			searchInvoices();
