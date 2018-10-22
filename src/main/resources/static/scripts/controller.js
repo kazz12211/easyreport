@@ -19,7 +19,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			createdBefore: "", 
 			createdAfter: "", 
 			processStates: [], 
-			limit: 10, 
+			limit: $scope.fetchLimit, 
 			page: 0,
 			tzOffset: getTzOffset()
 		};
