@@ -16,9 +16,10 @@
 <script src="scripts/controller.js"></script>
 </head>
 <body ng-app="app" ng-controller="invoiceController">
-	<header data-ts="TopBar" id="home-topbar"></header>
+<div data-ts="App">
 	<main data-ts="Main">
-	<div data-ts="MainContent">
+	<div data-ts="Content">
+	<div data-ts="Panel">
 	<div id="tab0" ng-show="showTab == 0">
 		<form data-ts="Form" >
 			<fieldset class="ts-multi">
@@ -67,6 +68,8 @@
 		<div data-ts="Table" id="invoice-table"></div>
 	</div>
 	</div>
+	</div>
 	</main>
+</div>
 </body>
 </html>

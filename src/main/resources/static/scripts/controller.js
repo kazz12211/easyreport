@@ -3,7 +3,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 	
 	$scope.ui.ready(function() {
 		
-		$scope.topbar = ts.ui.get("#home-topbar");
+		$scope.topbar = $scope.ui.TopBar;
 		$scope.invoiceTable = ts.ui.get("#invoice-table");
 		$scope.pop = ts.ui.Notification;
 		$scope.showTab = 0;
@@ -37,6 +37,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			var locale = response[0];
 			$scope.locale = locale;
 			
+			$scope.ui.Header.title('Easy Report');
 			$scope.topbar.tabs([{
 				label: locale["Tab.Invoice"],
 				id: "tab0",
