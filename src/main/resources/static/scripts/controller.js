@@ -92,15 +92,15 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			.selectable(function(selected, unselected) {
 				selectedRows = selected;
 			})
-			.onselect(function(selected, unselected) {
-				updateDownloadButton();
-			})
 			.buttons([
 				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
 					$scope.download();
 				}}
 			]) 
 			.max(10).sort(0, true);	
+			$scope.invoiceTable.onselect = function(selected, unselected) {
+				updateDownloadButton;
+			};
 			
 			
 		});
