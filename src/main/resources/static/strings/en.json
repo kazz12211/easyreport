@@ -46,5 +46,9 @@
 		"IssueDate" : "Issue Date",
 		"State" : "State",
 		"RecordsHit": "records hit"
+	},
+	"Param" : {
+		"FetchLimitIs": "Fetch limit is",
+		"Records" : "records"
 	}
 }

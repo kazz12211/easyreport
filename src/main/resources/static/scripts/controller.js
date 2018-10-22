@@ -31,7 +31,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		                "Stag.Inbox", "Stag.Outbox",
 		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed",
 		                "Index.Download",
-		                "Table.RecordsHit"]),
+		                "Table.RecordsHit",
+		                "Param.FetchLimitIs", "Param.Records"]),
 		    $req.getParams()
 		])
 		.then(function(response) {

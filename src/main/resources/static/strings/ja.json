@@ -46,5 +46,9 @@
 		"IssueDate" : "発行日",
 		"State" : "ステータス",
 		"RecordsHit": "件がヒット"
+	},
+	"Param" : {
+		"FetchLimitIs": "表示する件数の上限は",
+		"Records" : "件です。"
 	}
 }
