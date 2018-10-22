@@ -89,9 +89,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			.sortable(function(index, ascending) {
 				$scope.invoiceTable.sort(index, ascending);
 			})
-			.selectable(function(selected, unselected) {
-				selectedRows = selected;
-			})
 			.buttons([
 				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
 					$scope.download();
@@ -99,10 +96,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			]) 
 			.max(10).sort(0, true);	
 			$scope.invoiceTable.onselect = function(selected, unselected) {
-				updateDownloadButton;
+				selectedRows = selected;
+				updateDownloadButton();
 			};
 			
-			
+			updateDownloadButton();
 		});
 		
 		$scope.submitForm = function() {
