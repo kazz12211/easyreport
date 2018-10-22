@@ -34,7 +34,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed",
 		                "Index.Download",
 		                "Table.RecordsHit",
-		                "Param.FetchLimitIs", "Param.Records"]),
+		                "Param.FetchLimitIs", "Param.Records",
+		                "Index.Searching"]),
 		    $req.getParams()
 		])
 		.then(function(response) {
@@ -91,6 +92,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			.selectable(function(selected, unselected) {
 				selectedRows = selected;
 			})
+			.onselect(function(selected, unselected) {
+				updateDownloadButton();
+			})
 			.buttons([
 				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
 					$scope.download();
@@ -129,6 +133,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.pager({pages:0});
 			$scope.invoiceTable.status('');
 			$('#stateOptions option').prop('selected', false);
+			updateDownloadButton();
 		};
 		
 		$scope.download = function() {
@@ -148,9 +153,17 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			});
 		};
 		
+		function updateDownloadButton() {
+			var button = $scope.invoiceTable.buttons()[0];
+			button.disabled = $scope.selectedRows.length === 0;
+		}
+		
 		function searchInvoices() {
+			var main = $('main').first();
+			main.attr('data-ts.busy', locale['Index.Searching']);
 			$q.all([$req.searchInvoices($scope.queryParam)])
 			.then(function(response) {
+				main.attr('data-ts.busy', '');
 				var contentType = response[0].headers('Content-Type');
 				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
 					$scope.invoicePage = response[0].data;

@@ -18,7 +18,8 @@
 		"Search" : "検索",
 		"ClearForm" : "検索条件クリア",
 		"Test" : "テスト",
-		"Download" : "ダウンロード"
+		"Download" : "ダウンロード",
+		"Searching": "検索中..."
 	},
 	"Tab" : {
 		"Invoice" : "請求書"

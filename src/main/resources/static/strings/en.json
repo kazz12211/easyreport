@@ -18,7 +18,8 @@
 		"Search" : "Search",
 		"ClearForm" : "Clear Form",
 		"Test" : "Test",
-		"Download" : "Download"
+		"Download" : "Download",
+		"Searching": "Searching..."
 	},
 	"Tab" : {
 		"Invoice" : "Invoice"
