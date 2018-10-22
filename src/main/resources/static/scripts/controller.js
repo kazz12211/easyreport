@@ -41,7 +41,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			var locale = response[0];
 			$scope.locale = locale;
 			$scope.fetchLimits = response[1].data;
-			$scope.fetchLimit = fetchLimits.invoice || 500;
+			$scope.fetchLimit = $scope.fetchLimits.invoice || 500;
 			
 			$scope.ui.Header.title('Easy Report');
 			$scope.topbar.tabs([{
@@ -98,7 +98,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			]) 
 			.max(10).sort(0, true);	
 			
-			$scope.ui.Fotter.status=locale["Param.FetchLimitIs"] + " " + $scope.fetchLimit + " " + locale["Param.Records"];
+			$scope.ui.Footer.status=locale["Param.FetchLimitIs"] + " " + $scope.fetchLimit + " " + locale["Param.Records"];
 			
 		});
 		
@@ -172,6 +172,15 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			});
 		}
 		
+		function localizedStateString(state) {
+			for(var i = 0; i < $scope.stateOptions.length; i++) {
+				if($scope.stateOptions[i].value === state) {
+					return $scope.stateOptions[i].text;
+				}
+			}
+			return "";
+		}
+		
 		function populateInvoiceTable() {
 			var rows = [];
 			for(var i = 0; i < $scope.invoicePage.invoices.length; i++) {
@@ -184,7 +193,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					invoice.total, 
 					invoice.currency || "", 
 					invoice.issueDate || "", 
-					invoice.state || ""
+					localizedStateString(invoice.state)
 				]);
 			}
 			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + $scope.locale["Table.RecordsHit"]);
