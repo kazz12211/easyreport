@@ -36,7 +36,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		    $req.getParams()
 		])
 		.then(function(response) {
-			var locale = response[0];
+			var locale = response[0].data;
 			$scope.locale = locale;
 			$scope.fetchLimits = response[1].data;
 			$scope.fetchLimit = fetchLimits.invoice || 500;
