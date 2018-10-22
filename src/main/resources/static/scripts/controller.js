@@ -9,6 +9,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		$scope.showTab = 0;
 		$scope.popup = ts.ui.Notification;
 		$scope.locale;
+		$scope.fetchLimits = {invoice:500};
+		$scope.fetchLimit = $scope.fetchLimits.invoice;
 		
 		$scope.queryParam = {
 			stag: "inbox", 
@@ -36,7 +38,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		    $req.getParams()
 		])
 		.then(function(response) {
-			var locale = response[0].data;
+			var locale = response[0];
 			$scope.locale = locale;
 			$scope.fetchLimits = response[1].data;
 			$scope.fetchLimit = fetchLimits.invoice || 500;
