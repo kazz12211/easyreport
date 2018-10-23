@@ -213,7 +213,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			if($scope.invoicePage.itemCount % 10 > 0) {
 				pages = pages+1;
 			}
-			$scope.invoiceTable.pager({pages:pages});
+			$scope.invoiceTable.pager({pages:pages, page:0, onselect:loadpage});
+			loadpage(0);
 			/*
 			$scope.invoiceTable.pager({
 				pages: $scope.invoicePage.numPages,
@@ -225,8 +226,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 	
 		function loadpage(index) {
-			$scope.queryParam.page = index;
-			searchInvoices();
+			$scope.invoiceTable.pager().page = index;
+			//$scope.queryParam.page = index;
+			//searchInvoices();
 		}
 		
 		function getTzOffset() {
