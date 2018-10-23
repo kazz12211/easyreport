@@ -179,7 +179,7 @@ public class DocumentRetrievalServiceImpl implements DocumentRetrievalService {
     public String getCompanyNameById(String companyId) throws JSONException {
         LOGGER.info("get Company Name ");
 
-        HttpEntity<String> requestEntity = tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_JSON_VALUE);
         ResponseEntity responseEntity = restTemplate.exchange(URI_COMPANY_INFO_BY_ID, HttpMethod.GET, requestEntity, String.class, companyId);
 
         return new JSONObject(responseEntity.getBody().toString()).get("CompanyName").toString();

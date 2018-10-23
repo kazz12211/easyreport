@@ -218,8 +218,13 @@ fi
 
 WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
 
-exec "$JAVACMD" \
-  $MAVEN_OPTS \
-  -classpath "$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar" \
-  "-Dmaven.home=${M2_HOME}" "-Dmaven.multiModuleProjectDirectory=${MAVEN_PROJECTBASEDIR}" \
-  ${WRAPPER_LAUNCHER} $MAVEN_CONFIG "$@"
+RUN_COMMAND="$JAVACMD $MAVEN_OPTS 
+            -classpath $MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar 
+            -Dmaven.home=${M2_HOME} 
+            -Dmaven.multiModuleProjectDirectory=${MAVEN_PROJECTBASEDIR} ${WRAPPER_LAUNCHER} $MAVEN_CONFIG $@"
+
+if [ -n "$ACTIVE_PROFILE" ]; then
+   RUN_COMMAND="$RUN_COMMAND -P $ACTIVE_PROFILE"
+fi
+
+exec $RUN_COMMAND

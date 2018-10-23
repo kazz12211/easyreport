@@ -2,14 +2,13 @@ package jp.tsubakicraft.easyreport.tradeshift.services;
 
 import java.text.ParseException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.json.JSONException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 
+import jp.tsubakicraft.easyreport.tradeshift.domain.SessionData;
 import jp.tsubakicraft.easyreport.tradeshift.domain.dto.JwtDTO;
 
 @Service
@@ -21,13 +20,17 @@ public interface TokenService {
 
     void refreshToken() throws JSONException;
 
+    OAuth2AccessToken refreshToken(OAuth2AccessToken accessToken) throws JSONException;
+
     OAuth2AccessToken getAccessTokenFromContext();
 
-    HttpEntity getRequestHttpEntityWithAccessToken() throws JSONException;
+    HttpEntity<?> getRequestHttpEntityWithAccessToken() throws JSONException;
 
-    HttpEntity getRequestHttpEntityWithAccessToken(String acceptType) throws JSONException;
+    HttpEntity<?> getRequestHttpEntityWithAccessToken(String acceptType) throws JSONException;
 
-    String getCurrentUserId() throws ParserConfigurationException;
+    HttpEntity<?> getRequestHttpEntityWithAccessToken(OAuth2AccessToken accessToken, String contentType, String acceptType) throws JSONException;
+
+    String getCurrentUserId();
 
     String getCurrentCompanyId();
 
@@ -35,6 +38,11 @@ public interface TokenService {
 
     void setAccessToken(OAuth2AccessToken accessToken);
 
-    HttpEntity getRequestHttpEntityWithAccessToken(MediaType mediaType) throws JSONException;
+    void setJwtDTO(JwtDTO jwtDTO);
 
+    void logout();
+
+    void setSessionData(SessionData sessionData);
+
+    HttpEntity<?> getRequestHttpEntityWithAccessToken(MediaType mediaType) throws JSONException;
 }

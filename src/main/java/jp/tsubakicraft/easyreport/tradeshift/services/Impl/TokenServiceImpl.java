@@ -1,5 +1,9 @@
 package jp.tsubakicraft.easyreport.tradeshift.services.Impl;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,17 +23,14 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
-
 import com.nimbusds.jwt.PlainJWT;
 
 import jp.tsubakicraft.easyreport.tradeshift.config.PropertySources;
 import jp.tsubakicraft.easyreport.tradeshift.config.authentication.CustomAuthenticationProvider;
 import jp.tsubakicraft.easyreport.tradeshift.domain.SessionData;
-import jp.tsubakicraft.easyreport.tradeshift.domain.dto.JwtDTO;
 import jp.tsubakicraft.easyreport.tradeshift.services.TokenService;
+import jp.tsubakicraft.easyreport.tradeshift.domain.dto.JwtDTO;
+
 
 @Service
 public class TokenServiceImpl implements TokenService {
@@ -57,8 +58,8 @@ public class TokenServiceImpl implements TokenService {
     private CustomAuthenticationProvider customAuthenticationProvider;
 
     /**
-     * Inject PropertySources bean by constructor,
-     * Init AUTHORIZE_URL, ACCESS_TOKEN_URI, CLIENT_ID, REDIRECT_URI, CLIENT_SECRET
+     * Inject PropertySources bean by constructor, Init AUTHORIZE_URL,
+     * ACCESS_TOKEN_URI, CLIENT_ID, REDIRECT_URI, CLIENT_SECRET
      *
      * @param propertySources
      */
@@ -72,7 +73,7 @@ public class TokenServiceImpl implements TokenService {
         this.CLIENT_ID = propertySources.getClientID();
         this.REDIRECT_URI = propertySources.getRedirectUri();
         this.CLIENT_SECRET = propertySources.getClientSecret();
-        
+
     }
 
     /**
@@ -84,17 +85,20 @@ public class TokenServiceImpl implements TokenService {
     public String getAuthorizationCodeURL() {
         LOGGER.info("get authorization url", TokenServiceImpl.class);
 
-        String authorizationCodeURL = AUTHORIZE_URL + "&client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI + "&scope=offline";
+        String authorizationCodeURL = AUTHORIZE_URL + "&client_id=" + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
+                + "&scope=offline";
 
         return authorizationCodeURL;
     }
 
     /**
-     * Receive oauth2 token from authentication server and store it in the session context
+     * Receive oauth2 token from authentication server and store it in the session
+     * context
      *
-     * @param authorizationCode from authentication server
+     * @param authorizationCode
+     *            from authentication server
      * @return oauth2 token
-     * @throws JSONException 
+     * @throws JSONException
      * @throws IOException
      */
     @Override
@@ -103,7 +107,8 @@ public class TokenServiceImpl implements TokenService {
 
         OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, ACCESS_TOKEN_URI);
         oAuthRequest.addHeader("Content-Type", HEADER_CONTENT_TYPE);
-        oAuthRequest.addHeader("Authorization", HEADER_AUTHORIZATION_TYPE + Base64.encodeBase64String(new String(CLIENT_ID + ":" + CLIENT_SECRET).getBytes()));
+        oAuthRequest.addHeader("Authorization", HEADER_AUTHORIZATION_TYPE
+                + Base64.encodeBase64String(new String(CLIENT_ID + ":" + CLIENT_SECRET).getBytes()));
         oAuthRequest.setCharset(HEADER_CHAR_SET_TYPE);
         oAuthRequest.addBodyParameter("grant_type", AUTHORIZATION_CODE_GRANT_TYPE);
         oAuthRequest.addBodyParameter("code", authorizationCode);
@@ -122,10 +127,10 @@ public class TokenServiceImpl implements TokenService {
         return accessToken;
     }
 
-
     /**
      * Obtain access token by refresh token
-     * @throws JSONException 
+     *
+     * @throws JSONException
      */
     @Override
     public void refreshToken() throws JSONException {
@@ -134,7 +139,8 @@ public class TokenServiceImpl implements TokenService {
             OAuth2RefreshToken tempRefreshToken = this.sessionData.getRefreshToken();
             OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, ACCESS_TOKEN_URI);
             oAuthRequest.addHeader("Content-Type", CONTENT_TYPE_WEB_FORM);
-            oAuthRequest.addHeader("Authorization", HEADER_AUTHORIZATION_TYPE + Base64.encodeBase64String(new String(CLIENT_ID + ":" + CLIENT_SECRET).getBytes()));
+            oAuthRequest.addHeader("Authorization", HEADER_AUTHORIZATION_TYPE
+                    + Base64.encodeBase64String(new String(CLIENT_ID + ":" + CLIENT_SECRET).getBytes()));
             oAuthRequest.setCharset(HEADER_CHAR_SET_TYPE);
             oAuthRequest.addBodyParameter("grant_type", REFRESH_TOKEN_GRANT_TYPE);
             oAuthRequest.addBodyParameter("refresh_token", getAccessTokenFromContext().getRefreshToken().getValue());
@@ -166,6 +172,45 @@ public class TokenServiceImpl implements TokenService {
     }
 
     /**
+     * Obtain access token by refresh token
+     *
+     * @throws JSONException
+     */
+    @Override
+    public OAuth2AccessToken refreshToken(OAuth2AccessToken accessToken) throws JSONException {
+
+        OAuth2RefreshToken tempRefreshToken = accessToken.getRefreshToken();
+        OAuthRequest oAuthRequest = new OAuthRequest(Verb.POST, ACCESS_TOKEN_URI);
+        oAuthRequest.addHeader("Content-Type", CONTENT_TYPE_WEB_FORM);
+        oAuthRequest.addHeader("Authorization", HEADER_AUTHORIZATION_TYPE
+                + Base64.encodeBase64String(new String(CLIENT_ID + ":" + CLIENT_SECRET).getBytes()));
+        oAuthRequest.setCharset(HEADER_CHAR_SET_TYPE);
+        oAuthRequest.addBodyParameter("grant_type", REFRESH_TOKEN_GRANT_TYPE);
+        oAuthRequest.addBodyParameter("refresh_token", accessToken.getRefreshToken().getValue());
+        oAuthRequest.addBodyParameter("scope", CLIENT_ID + "." + propertySources.getTradeshiftAppVersion());
+
+        LOGGER.info("send request for access token by refresh token", TokenServiceImpl.class);
+        String refreshTokenResponse = oAuthRequest.send().getBody();
+        JSONObject responseJson;
+
+        if (refreshTokenResponse != null) {
+            responseJson = new JSONObject(refreshTokenResponse);
+            Object accessTokenJson = new JSONObject(refreshTokenResponse).get("access_token");
+            if (accessTokenJson != null) {
+                accessToken = parseAccessToken(responseJson, 1000);
+                ((DefaultOAuth2AccessToken) accessToken).setRefreshToken(tempRefreshToken);
+                return accessToken;
+            } else {
+                LOGGER.warn("failed to get authorization token by refresh token", TokenServiceImpl.class);
+                return accessToken;
+            }
+        } else {
+            LOGGER.warn("failed to get authorization token by refresh token", TokenServiceImpl.class);
+            return accessToken;
+        }
+    }
+
+    /**
      * Get Access Token from session context
      *
      * @return OAuth2AccessToken
@@ -181,10 +226,10 @@ public class TokenServiceImpl implements TokenService {
      * Get HttpEntity that contains HttpHeader with Access Token
      *
      * @return request HttpEntity with Access Token
-     * @throws JSONException 
+     * @throws JSONException
      */
     @Override
-    public HttpEntity getRequestHttpEntityWithAccessToken() throws JSONException {
+    public HttpEntity<?> getRequestHttpEntityWithAccessToken() throws JSONException {
         LOGGER.info("get HttpEntity with Access Token", TokenServiceImpl.class);
 
         if (getAccessTokenFromContext().isExpired()) {
@@ -198,7 +243,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public HttpEntity getRequestHttpEntityWithAccessToken(MediaType mediaType) throws JSONException {
+    public HttpEntity<?> getRequestHttpEntityWithAccessToken(MediaType mediaType) throws JSONException {
         LOGGER.info("get HttpEntity with Access Token", TokenServiceImpl.class);
 
         if (getAccessTokenFromContext().isExpired()) {
@@ -208,19 +253,40 @@ public class TokenServiceImpl implements TokenService {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", "Bearer " + getAccessTokenFromContext().getValue());
         requestHeaders.add(HttpHeaders.ACCEPT, mediaType.getType());
-        //requestHeaders.add(HttpHeaders.ACCEPT_CHARSET, "utf-8");
+        // requestHeaders.add(HttpHeaders.ACCEPT_CHARSET, "utf-8");
 
         return new HttpEntity<>(requestHeaders);
+    }
+
+    @Override
+    public HttpEntity<?> getRequestHttpEntityWithAccessToken(OAuth2AccessToken accessToken, String contentType, String acceptType) throws JSONException {
+        LOGGER.info("get HttpEntity with Access Token", TokenServiceImpl.class);
+        if (accessToken.isExpired()) {
+            LOGGER.info("Token expired, refreshing {}", TokenServiceImpl.class);
+            accessToken = refreshToken(accessToken);
+        }
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("Authorization", "Bearer " + accessToken.getValue());
+        if (acceptType != null) {
+            requestHeaders.add(HttpHeaders.ACCEPT, acceptType);
+        }
+
+        if (contentType != null) {
+            requestHeaders.add(HttpHeaders.CONTENT_TYPE, contentType);
+        }
+        HttpEntity<?> requestEntity = new HttpEntity<>(requestHeaders);
+
+        return requestEntity;
     }
 
     /**
      * Get HttpEntity that contains HttpHeader with Access Token
      *
      * @return request HttpEntity with Access Token
-     * @throws JSONException 
+     * @throws JSONException
      */
     @Override
-    public HttpEntity getRequestHttpEntityWithAccessToken(String acceptType) throws JSONException {
+    public HttpEntity<?> getRequestHttpEntityWithAccessToken(String acceptType) throws JSONException {
         LOGGER.info("get HttpEntity with Access Token", TokenServiceImpl.class);
         if (getAccessTokenFromContext().isExpired()) {
             refreshToken();
@@ -230,7 +296,7 @@ public class TokenServiceImpl implements TokenService {
         if (acceptType != null) {
             requestHeaders.add("Accept", acceptType);
         }
-        HttpEntity requestEntity = new HttpEntity(requestHeaders);
+        HttpEntity<?> requestEntity = new HttpEntity<>(requestHeaders);
 
         return requestEntity;
     }
@@ -265,6 +331,16 @@ public class TokenServiceImpl implements TokenService {
         this.sessionData.setAccessToken(accessToken);
     }
 
+    @Override
+    public void setJwtDTO(JwtDTO jwtDTO) {
+        this.sessionData.setJwtDTO(jwtDTO);
+    }
+
+    @Override
+    public void logout() {
+        customAuthenticationProvider.logout();
+    }
+
     private JwtDTO parseJWTToken(JSONObject responseJson) throws ParseException, JSONException {
         String idToken = parseJsonField(responseJson, "id_token");
         JwtDTO jwtToken = new JwtDTO();
@@ -284,7 +360,8 @@ public class TokenServiceImpl implements TokenService {
     private String parseJsonField(JSONObject responseJson, String field) throws JSONException {
         Object parsedField = responseJson.get(field);
         if (parsedField == null) {
-            throw new NullPointerException(String.format("The following field was missing from the response JSON: [%s]", field));
+            throw new NullPointerException(
+                    String.format("The following field was missing from the response JSON: [%s]", field));
         }
         return parsedField.toString();
     }
@@ -292,19 +369,26 @@ public class TokenServiceImpl implements TokenService {
     private String parseJwtField(net.minidev.json.JSONObject jwtJson, String field) {
         Object parsedField = jwtJson.get(field);
         if (parsedField == null) {
-            throw new NullPointerException(String.format("The following field was missing from the JWT token: [%s]", field));
+            throw new NullPointerException(
+                    String.format("The following field was missing from the JWT token: [%s]", field));
         }
         return parsedField.toString();
     }
 
     private DefaultOAuth2AccessToken parseAccessToken(JSONObject responseJson, int expireTime) throws JSONException {
-        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(parseJsonField(responseJson, "access_token"));
+        DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(
+                parseJsonField(responseJson, "access_token"));
         accessToken.setExpiration(getExpirationTime(parseJsonField(responseJson, "expires_in"), expireTime));
         return accessToken;
     }
 
     private Date getExpirationTime(String expiresIn, int expireTime) {
         return new Date(System.currentTimeMillis() + (Long.valueOf(expiresIn) * expireTime));
+    }
+
+    @Override
+    public void setSessionData(SessionData sessionData) {
+        this.sessionData = sessionData;
     }
 
 }

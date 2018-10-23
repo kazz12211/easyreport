@@ -87,7 +87,7 @@ public class OrderRetrievalServiceImpl implements OrderRetrievalService {
             tokenService.refreshToken();
         }
 
-        HttpEntity<String> requestEntity = tokenService.getRequestHttpEntityWithAccessToken();
+        HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken();
         ResponseEntity<?> responseEntity = restTemplate.exchange(URI_LIST_DOCUMENTS, HttpMethod.GET,
                                                                     requestEntity, String.class, URI_PARAM_DOC_TYPE,
                                                                     ordersLimitPerPage, pageNumber, URI_PARAM_ORDER_BY, orderState);
@@ -108,7 +108,7 @@ public class OrderRetrievalServiceImpl implements OrderRetrievalService {
     public String getCompanyName(String companyId) throws IOException, SAXException, ParserConfigurationException, JSONException {
         LOGGER.info("get company name by company id ");
 
-        HttpEntity<String> requestEntity = tokenService.getRequestHttpEntityWithAccessToken();
+        HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken();
         ResponseEntity<?> responseEntity = restTemplate.exchange(URI_COMPANY_INFO_BY_ID, HttpMethod.GET,
                 requestEntity, String.class, companyId);
 
