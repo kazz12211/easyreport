@@ -209,6 +209,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			}
 			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + $scope.locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows).max(10);
+			var pages = $scope.invoicePage.itemCount / 10;
+			if($scope.invoicePage.itemCount % 10 > 0) {
+				pages = pages+1;
+			}
+			$scope.invoiceTable.pager({pages:pages});
 			/*
 			$scope.invoiceTable.pager({
 				pages: $scope.invoicePage.numPages,
