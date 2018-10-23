@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan("jp.tsubakicraft.easyreport")
+@ComponentScan("jp.tsubakicraft")
 public class EasyreportApplication {
 
 	public static void main(String[] args) {
