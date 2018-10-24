@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import jp.tsubakicraft.easyreport.config.ApplicationConfig;
 import jp.tsubakicraft.easyreport.domain.dto.FetchLimitDTO;
-import jp.tsubakicraft.tradeshift.config.ApplicationProperties;
 
 @Controller
 @RequestMapping("/init")
@@ -24,14 +24,14 @@ public class InitialController {
 	static Logger LOGGER = LoggerFactory.getLogger(InitialController.class);
 	
     @Autowired
-    protected ApplicationProperties applicationProperties;
+    protected ApplicationConfig applicationConfig;
 
 
     @RequestMapping(value="/params", method=RequestMethod.GET, produces="application/json; charset=utf-8")
     public ResponseEntity<?> getParam(final HttpServletResponse response) throws JSONException, IOException {
     	LOGGER.debug("getting app parameters", InitialController.class);
     	FetchLimitDTO fetchLimits = new FetchLimitDTO();
-    	fetchLimits.setInvoice(applicationProperties.getInvoiceFetchLimit());
+    	fetchLimits.setInvoice(applicationConfig.getFetchLimits().getInvoice());
     	return new ResponseEntity(fetchLimits, HttpStatus.OK);
     	
     }

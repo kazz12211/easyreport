@@ -9,11 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationProperties implements Serializable {
 	
-	private static final int DEFAULT_FETCH_LIMIT = 100;
-
-	@Value("${fetchLimit.invoice}")
-	private String invoiceFetchLimit;
-	
 	@Value("${oauthType}")
 	private String oauthType;
 	
@@ -55,15 +50,6 @@ public class ApplicationProperties implements Serializable {
 
 	@Value("${app.domain}")
 	private String appDomain;
-	
-	public int getInvoiceFetchLimit() {
-		try {
-			int limit = Integer.parseInt(invoiceFetchLimit);
-			return limit;
-		} catch (Exception e) {
-			return DEFAULT_FETCH_LIMIT;
-		}
-	}
 	
 	/**
 	 * @return the oauthType

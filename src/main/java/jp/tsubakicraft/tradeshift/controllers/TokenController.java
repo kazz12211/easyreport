@@ -56,6 +56,7 @@ public class TokenController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getAuthorizationCode() throws IOException, JSONException, SAXException, ParserConfigurationException {
+    	LOGGER.info("oauthType=" + applicationProperties.getOauthType());
         if(StringUtils.equalsIgnoreCase(applicationProperties.getOauthType(), "1")) {
             session.setAttribute(TsConst.NO_RE_AUTHEN, TsConst.ACTIVE);
         }
