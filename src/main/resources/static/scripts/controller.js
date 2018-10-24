@@ -195,17 +195,13 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 								$scope.pop.error(error);
 								exit = true;
 							});
+							return promise;
 						});
 					}
-					populateInvoiceTable();
-					main.attr('data-ts.busy', '');
-
-					/*
 					promise.finally(() => {
 						populateInvoiceTable();
 						main.attr('data-ts.busy', '');
 					});
-					*/
 				} else {
 					populateInvoiceTable();
 					main.attr('data-ts.busy', '');
