@@ -184,21 +184,26 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				$scope.invoicePages.push(response);
 				$scope.numPages = response.numPages;
 				if($scope.numPages > 1) {
+					var params = [];
+					for(var i = 1; i < $scope.numPages; i++) {
+						var param = $scope.queryParam;
+						param.page = i;
+						params.push(param);
+					}
+					
 					var promise = $q.all([]);
-					var exit = false;
-					for(var i = 1; i < $scope.numPages && exit == false; i++) {
-						$scope.queryParam.page = i;
+					angular.forEach(params, (param) => {
 						promise = promise.then(() => {
 							return $timeout(() => {
-								retrieveInvoicePage($scope.queryParam, (response) => {
+								retrieveInvoicePage(param, (response) => {
 									$scope.invoicePages.push(response);
 								}, (error) => {
 									$scope.pop.error(error);
-									exit = true;
 								});
 							}, 10);
 						});
-					}
+					});
+					
 					promise.finally(() => {
 						populateInvoiceTable();
 						main.attr('data-ts.busy', '');
