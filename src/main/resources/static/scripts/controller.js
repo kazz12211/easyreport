@@ -195,7 +195,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 								$scope.pop.error(error);
 								exit = true;
 							});
-							return promise;
+							return $timeout(() => {}, 10);
 						});
 					}
 					promise.finally(() => {
