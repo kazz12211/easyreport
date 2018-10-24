@@ -200,12 +200,15 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					
 					promise.finally(() => {
 						populateInvoiceTable();
+						main.attr('data-ts.busy', '');
 					});
 				} else {
 					populateInvoiceTable();
+					main.attr('data-ts.busy', '');
 				}
 			}, (error) => {
 				$scope.pop.error(error);
+				main.attr('data-ts.busy', '');
 			}); 
 			/*
 			$q.all([$req.searchInvoices($scope.queryParam)])
