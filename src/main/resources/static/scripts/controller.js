@@ -197,11 +197,15 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 							});
 						});
 					}
-					
+					populateInvoiceTable();
+					main.attr('data-ts.busy', '');
+
+					/*
 					promise.finally(() => {
 						populateInvoiceTable();
 						main.attr('data-ts.busy', '');
 					});
+					*/
 				} else {
 					populateInvoiceTable();
 					main.attr('data-ts.busy', '');
