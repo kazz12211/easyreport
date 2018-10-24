@@ -24,7 +24,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			tzOffset: getTzOffset()
 		};
 		
-		$scope.invoicePage = {};
+		$scope.invoicePages = [];
 		$scope.selectedRows = [];
 		
 		$q.all([
@@ -156,12 +156,58 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			button.disabled = $scope.selectedRows.length === 0;
 		}
 		
+		function retrieveInvoicePage(params, successCallback, errorCallback) {
+			$req.searchInvoices(params).then((response) => {
+				var contentType = response.headers('Content-Type');
+				if(response.status == 200 && contentType.indexOf('application/json') >= 0) {
+					successCallback(response.data);
+				} else {
+					if(response.status != 200) {
+						errorCallback('Failed to get response. HTTP Status: ' + response.status);
+					} else {
+						errorCallback('Failed to get JSON response. Content-Type: ' + contentType);
+					}
+				}
+			}, (response) => {
+				console.log(response);
+				errorCallback('Failed to get invoices');
+			});
+		} 
+		
 		function searchInvoices() {
 			var main = $('main').first();
 			main.attr('data-ts.busy', $scope.locale['Index.Searching']);
+			$scope.invoicePages = [];
+			$scope.numPages = 0;
+			
+			retrieveInvoicePage($scope.queryParam, (response) => {
+				$scope.invoicePages.push(response);
+				$scope.numPages = response.numPages;
+				if($scope.numPages > 1) {
+					var promise = $q.all([]);
+					var exit = false;
+					for(var i = 1; i < $scope.numPages && exit == false; i++) {
+						$scope.queryParam.page = i;
+						promise = promise.then(() => {
+							retrieveInvoicePage($scope.queryParam, (response) => {
+								$scope.invoicePages.push(response);
+							}, (error) => {
+								$scope.pop.error(error);
+								exit = true;
+							});
+						});
+					}
+					
+					promise.finally(() => {
+						populateInvoiceTable();
+					});
+				}
+			}, (error) => {
+				$scope.pop.error(error);
+			}); 
+			/*
 			$q.all([$req.searchInvoices($scope.queryParam)])
 			.then(function(response) {
-				main.attr('data-ts.busy', '');
 				var contentType = response[0].headers('Content-Type');
 				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
 					$scope.invoicePage = response[0].data;
@@ -181,6 +227,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				console.log(error);
 				$scope.pop.error(error.statusText);
 			});
+			*/
 		}
 		
 		function localizedStateString(state) {
@@ -194,20 +241,23 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		function populateInvoiceTable() {
 			var rows = [];
-			for(var i = 0; i < $scope.invoicePage.invoices.length; i++) {
-				var invoice = $scope.invoicePage.invoices[i];
-				rows.push([
-					invoice.id || "", 
-					invoice.receiverCompanyName || "", 
-					invoice.senderCompanyName || "", 
-					invoice.description || "", 
-					invoice.total, 
-					invoice.currency || "", 
-					invoice.issueDate || "", 
-					localizedStateString(invoice.state)
-				]);
+			for(var i = 0; i < $scope.invoicePages.length; i++) {
+				var page = $scope.invoicePages[i];
+				for(var j = 0; j < page.invoices.length; j++) {
+					var invoice = page.invoices[j];
+					rows.push([
+						invoice.id || "", 
+						invoice.receiverCompanyName || "", 
+						invoice.senderCompanyName || "", 
+						invoice.description || "", 
+						invoice.total, 
+						invoice.currency || "", 
+						invoice.issueDate || "", 
+						localizedStateString(invoice.state)
+					]);
+				}				
 			}
-			$scope.invoiceTable.status($scope.invoicePage.itemCount + " " + $scope.locale["Table.RecordsHit"]);
+			$scope.invoiceTable.status(rows.length + " " + $scope.locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows).max(10);
 			/*
 			$scope.invoiceTable.pager({
