@@ -182,10 +182,10 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			
 			retrieveInvoicePage($scope.queryParam, (response) => {
 				$scope.invoicePages.push(response);
-				$scope.numPages = response.numPages;
-				if($scope.numPages > 1) {
+				var numPages = response.numPages;
+				if(numPages > 1) {
 					var params = [];
-					for(var i = 1; i < $scope.numPages; i++) {
+					for(var i = 1; i < numPages; i++) {
 						var param = $scope.queryParam;
 						param.page = i;
 						params.push(param);
@@ -194,13 +194,13 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					var promise = $q.all([]);
 					angular.forEach(params, (param) => {
 						promise = promise.then(() => {
-							return $timeout(() => {
-								retrieveInvoicePage(param, (response) => {
-									$scope.invoicePages.push(response);
-								}, (error) => {
-									$scope.pop.error(error);
-								});
-							}, 10);
+							retrieveInvoicePage(param, (response) => {
+								$scope.invoicePages.push(response);
+								return $timeout(() => {}, 10);
+							}, (error) => {
+								$scope.pop.error(error);
+								return $timeout(() => {}, 10);
+							});
 						});
 					});
 					
