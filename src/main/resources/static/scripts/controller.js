@@ -201,6 +201,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					promise.finally(() => {
 						populateInvoiceTable();
 					});
+				} else {
+					populateInvoiceTable();
 				}
 			}, (error) => {
 				$scope.pop.error(error);
