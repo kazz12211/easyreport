@@ -189,13 +189,14 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					for(var i = 1; i < $scope.numPages && exit == false; i++) {
 						$scope.queryParam.page = i;
 						promise = promise.then(() => {
-							retrieveInvoicePage($scope.queryParam, (response) => {
-								$scope.invoicePages.push(response);
-							}, (error) => {
-								$scope.pop.error(error);
-								exit = true;
-							});
-							return $timeout(() => {}, 10);
+							return $timeout(() => {
+								retrieveInvoicePage($scope.queryParam, (response) => {
+									$scope.invoicePages.push(response);
+								}, (error) => {
+									$scope.pop.error(error);
+									exit = true;
+								});
+							}, 10);
 						});
 					}
 					promise.finally(() => {
