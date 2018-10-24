@@ -186,8 +186,17 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				if(numPages > 1) {
 					var params = [];
 					for(var i = 1; i < numPages; i++) {
-						var param = $scope.queryParam;
-						param.page = i;
+						var param = {
+								stag: $scope.queryParam.stag, 
+								minIssueDate: $scope.queryParam.minIssueDate, 
+								maxIssueDate: $scope.queryParam.maxIssueDate, 
+								createdBefore: $scope.queryParam.createdBefore, 
+								createdAfter: $scope.queryParam.createdAfter, 
+								processStates: $scope.queryParam.processStates, 
+								limit: $scope.fetchLimit, 
+								page: i,
+								tzOffset: getTzOffset()
+							};
 						params.push(param);
 					}
 					
