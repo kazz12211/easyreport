@@ -177,7 +177,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				}
 			}, (response) => {
 				console.log(response);
-				errorCallback($scope.locale['Error.FailedToFetchInvoices'] + response);
+				errorCallback($scope.locale['Error.FailedToFetchInvoices'] + JSON.stringify(response));
 			});
 		} 
 		
