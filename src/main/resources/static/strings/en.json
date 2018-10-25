@@ -46,7 +46,8 @@
 		"Currency" : "Currency",
 		"IssueDate" : "Issue Date",
 		"State" : "State",
-		"RecordsHit": "records hit"
+		"RecordsHit": "records hit",
+		"Selected": "records selected"
 	},
 	"Param" : {
 		"FetchLimitIs": "Fetch limit is",

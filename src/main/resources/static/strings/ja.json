@@ -46,7 +46,8 @@
 		"Currency" : "通貨",
 		"IssueDate" : "発行日",
 		"State" : "ステータス",
-		"RecordsHit": "件がヒット"
+		"RecordsHit": "件がヒット",
+		"Selected": "件が選択中"
 	},
 	"Param" : {
 		"FetchLimitIs": "表示する件数の上限は",

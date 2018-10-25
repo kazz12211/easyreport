@@ -35,14 +35,16 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		                "Index.Download",
 		                "Table.RecordsHit",
 		                "Param.FetchLimitIs", "Param.Records",
-		                "Index.Searching"]),
+		                "Index.Searching",
+		                "Error.InvalidResponse", "Error.InvalidContentType", "Error.FailedToFetchInvoices",
+		                "Table.Selected"]),
 		    $req.getParams()
 		])
 		.then(function(response) {
 			var locale = response[0];
 			$scope.locale = locale;
 			$scope.fetchLimits = response[1].data;
-			$scope.fetchLimit = $scope.fetchLimits.invoice || 500;
+			$scope.fetchLimit = $scope.fetchLimits.invoice || 100;
 			
 			$scope.ui.Header.title('Easy Report');
 			$scope.topbar.tabs([{
@@ -99,6 +101,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.onselect = function(selected, unselected) {
 				$scope.selectedRows = selected;
 				updateDownloadButton();
+				var status = $scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"];
+				if($scope.selectedRows.length > 0) {
+					status = status + " " + $scope.selectedRows.length + " " + $scope.locale["Table.Selected"];
+				}
+				$scope.invoiceTable.status(status);
 			};
 			
 			updateDownloadButton();
@@ -274,7 +281,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					]);
 				}				
 			}
-			$scope.invoiceTable.status(rows.length + " " + $scope.locale["Table.RecordsHit"]);
+			$scope.invoiceTable.status($scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows).max(10);
 		}
 		
