@@ -281,8 +281,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					]);
 				}				
 			}
-			$scope.invoiceTable.status($scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows).max(10);
+			var status = $scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"];
+			$scope.invoiceTable.status(status);
 		}
 		
 	
