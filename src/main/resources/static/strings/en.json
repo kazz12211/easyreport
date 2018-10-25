@@ -51,6 +51,11 @@
 	"Param" : {
 		"FetchLimitIs": "Fetch limit is",
 		"Records" : "records"
+	},
+	"Error": {
+		"InvalidResponse": "Invalid response. HTTP Status: ",
+		"InvalidContentType": "Invalid content-type. content-type: ",
+		"FailedToFetchInvoices": "Failed to fetch invoices: "
 	}
 	
 }

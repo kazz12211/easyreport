@@ -163,14 +163,14 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					successCallback(response.data);
 				} else {
 					if(response.status != 200) {
-						errorCallback('Failed to get response. HTTP Status: ' + response.status);
+						errorCallback($scope.locale['Error.InvalidResponse'] + response.status);
 					} else {
-						errorCallback('Failed to get JSON response. Content-Type: ' + contentType);
+						errorCallback($scope.locale['Error.InvalidContentType'] + contentType);
 					}
 				}
 			}, (response) => {
 				console.log(response);
-				errorCallback('Failed to get invoices');
+				errorCallback($scope.locale['Error.FailedToFetchInvoices'] + response);
 			});
 		} 
 		

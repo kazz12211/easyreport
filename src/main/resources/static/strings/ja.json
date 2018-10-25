@@ -51,6 +51,11 @@
 	"Param" : {
 		"FetchLimitIs": "表示する件数の上限は",
 		"Records" : "件です。"
+	},
+		"Error": {
+		"InvalidResponse": "不正なレスポンスです。 HTTPステータス: ",
+		"InvalidContentType": "不正な内容です。 データの種類: ",
+		"FailedToFetchInvoices": "請求書の検索に失敗しました。: "
 	}
 	
 }
