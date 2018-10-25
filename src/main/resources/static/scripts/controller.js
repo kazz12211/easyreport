@@ -99,7 +99,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			]) 
 			.max(10).sort(0, true);	
 			$scope.invoiceTable.onselect = function(selected, unselected) {
-				$scope.selectedRows = selected;
+				$scope.selectedRows = $scope.invoiceTable.selected();
 				updateDownloadButton();
 				var status = $scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"];
 				if($scope.selectedRows.length > 0) {
