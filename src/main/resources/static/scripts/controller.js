@@ -189,9 +189,22 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			return p;
 		}
 		
+		
+		function blockUserInteraction(message) {
+			$scope.ui.get('.ts-app', app => {
+				app.blocking(message);
+			});
+		}
+		
+		function unblockUserInteraction() {
+			$scope.ui.get('.ts-app' app => {
+				app.done();
+			});
+		}
+		
 		function searchInvoices() {
-			var main = $('main').first();
-			main.attr('data-ts.busy', $scope.locale['Index.Searching']);
+			blockUserInteraction($scope.locale['Index.Searching']);
+			
 			$scope.invoicePages = [];
 			$scope.numPages = 0;
 			
@@ -220,17 +233,17 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					
 					promise.finally(() => {
 						populateInvoiceTable();
-						main.attr('data-ts.busy', '');
+						unblockUserInteraction;
 					});
 					
 					deferred.resolve();
 				} else {
 					populateInvoiceTable();
-					main.attr('data-ts.busy', '');
+					unblockUserInteraction;
 				}
 			}, (error) => {
 				$scope.pop.error(error);
-				main.attr('data-ts.busy', '');
+				unblockUserInteraction;
 			}); 
 		}
 		
@@ -263,22 +276,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			}
 			$scope.invoiceTable.status(rows.length + " " + $scope.locale["Table.RecordsHit"]);
 			$scope.invoiceTable.rows(rows).max(10);
-			/*
-			$scope.invoiceTable.pager({
-				pages: $scope.invoicePage.numPages,
-				page: $scope.invoicePage.pageId,
-				onselect: loadpage
-			});
-			*/
 		}
 		
 	
-		function loadpage(index) {
-			$scope.invoiceTable.pager().page = index;
-			//$scope.queryParam.page = index;
-			//searchInvoices();
-		}
-		
 		function getTzOffset() {
 			var date = new Date();
 			return (date.getHours() - date.getUTCHours() + 24) % 24;
