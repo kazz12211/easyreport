@@ -233,17 +233,17 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					
 					promise.finally(() => {
 						populateInvoiceTable();
-						unblockUserInteraction;
+						unblockUserInteraction();
 					});
 					
 					deferred.resolve();
 				} else {
 					populateInvoiceTable();
-					unblockUserInteraction;
+					unblockUserInteraction();
 				}
 			}, (error) => {
 				$scope.pop.error(error);
-				unblockUserInteraction;
+				unblockUserInteraction();
 			}); 
 		}
 		
