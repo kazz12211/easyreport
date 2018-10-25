@@ -157,7 +157,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		}
 		
 		function retrieveInvoicePage(params, successCallback, errorCallback) {
-			$req.searchInvoices(params).then((response) => {
+			return $req.searchInvoices(params).then((response) => {
 				var contentType = response.headers('Content-Type');
 				if(response.status == 200 && contentType.indexOf('application/json') >= 0) {
 					successCallback(response.data);
@@ -174,6 +174,21 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			});
 		} 
 		
+		function copyParamWithPage(param, page) {
+			var p = {
+					stag: param.stag, 
+					minIssueDate: param.minIssueDate, 
+					maxIssueDate: param.maxIssueDate, 
+					createdBefore: param.createdBefore, 
+					createdAfter: param.createdAfter, 
+					processStates: param.processStates, 
+					limit: $scope.fetchLimit, 
+					page: page,
+					tzOffset: getTzOffset()
+			};
+			return p;
+		}
+		
 		function searchInvoices() {
 			var main = $('main').first();
 			main.attr('data-ts.busy', $scope.locale['Index.Searching']);
@@ -186,20 +201,24 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				if(numPages > 1) {
 					var params = [];
 					for(var i = 1; i < numPages; i++) {
-						var param = {
-								stag: $scope.queryParam.stag, 
-								minIssueDate: $scope.queryParam.minIssueDate, 
-								maxIssueDate: $scope.queryParam.maxIssueDate, 
-								createdBefore: $scope.queryParam.createdBefore, 
-								createdAfter: $scope.queryParam.createdAfter, 
-								processStates: $scope.queryParam.processStates, 
-								limit: $scope.fetchLimit, 
-								page: i,
-								tzOffset: getTzOffset()
-							};
+						var param = copyParamWithPage($scope.queryParam, i);
 						params.push(param);
 					}
 					
+					var deferred = $q.defer();
+					var promise = deferred.promise;
+					params.forEach((param) => {
+						promise = promise.finally(() => {
+							return retrieveInvoicePage(param, (response) => {
+								$scope.invoicePages.push(response);
+							}, (error) => {
+								$scope.pop.error(error);
+							});
+						});
+
+					});
+					
+					/*
 					var promise = $q.all([]);
 					angular.forEach(params, (param) => {
 						promise = promise.then(() => {
@@ -212,6 +231,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 							});
 						});
 					});
+					*/
 					
 					promise.finally(() => {
 						populateInvoiceTable();
