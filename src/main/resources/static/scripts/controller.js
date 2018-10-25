@@ -197,7 +197,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		}
 		
 		function unblockUserInteraction() {
-			$scope.ui.get('.ts-app' app => {
+			$scope.ui.get('.ts-app', app => {
 				app.done();
 			});
 		}
