@@ -237,6 +237,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 						populateInvoiceTable();
 						main.attr('data-ts.busy', '');
 					});
+					
+					deferred.resolve();
 				} else {
 					populateInvoiceTable();
 					main.attr('data-ts.busy', '');
