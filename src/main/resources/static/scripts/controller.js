@@ -72,19 +72,19 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$scope.invoiceTable.cols([{
 				label: locale["Table.ID"], flex: 2
 			},{
-				label: locale["Table.ReceiverCompany"], flex: 2
+				label: locale["Table.ReceiverCompany"], flex: 3
 			}, {
-				label: locale["Table.SenderCompany"], flex: 2
+				label: locale["Table.SenderCompany"], flex: 3
 			}, {
-				label: locale["Table.Description"], flex: 2
+				label: locale["Table.Description"], flex: 4
 			}, {
 				label: locale["Table.Total"], type: "ts-number", flex: 2
 			}, {
-				label: locale["Table.Currency"]
+				label: locale["Table.Currency"], flex:1
 			}, {
-				label: locale["Table.IssueDate"]
+				label: locale["Table.IssueDate"], flex:2
 			}, {
-				label: locale["Table.State"]
+				label: locale["Table.State"], flex:1
 			}])
 			.sortable(function(index, ascending) {
 				$scope.invoiceTable.sort(index, ascending);
@@ -218,21 +218,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 
 					});
 					
-					/*
-					var promise = $q.all([]);
-					angular.forEach(params, (param) => {
-						promise = promise.then(() => {
-							retrieveInvoicePage(param, (response) => {
-								$scope.invoicePages.push(response);
-								return $timeout(() => {}, 10);
-							}, (error) => {
-								$scope.pop.error(error);
-								return $timeout(() => {}, 10);
-							});
-						});
-					});
-					*/
-					
 					promise.finally(() => {
 						populateInvoiceTable();
 						main.attr('data-ts.busy', '');
@@ -247,29 +232,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				$scope.pop.error(error);
 				main.attr('data-ts.busy', '');
 			}); 
-			/*
-			$q.all([$req.searchInvoices($scope.queryParam)])
-			.then(function(response) {
-				var contentType = response[0].headers('Content-Type');
-				if(response[0].status == 200 && contentType.indexOf('application/json') >= 0) {
-					$scope.invoicePage = response[0].data;
-					populateInvoiceTable();
-					if($scope.invoicePage.invoices.length == 0) {
-						$scope.pop.info("No records found match the criteria.");
-					}
-				} else {
-					if(response.status != 200) {
-						$scope.pop.error('Failed to get response. HTTP Status: ' + response.status);
-					} else {
-						$scope.pop.error('Failed to get JSON response. Content-Type: ' + contentType);
-					}
-				}
-				
-			}, function(error) {
-				console.log(error);
-				$scope.pop.error(error.statusText);
-			});
-			*/
 		}
 		
 		function localizedStateString(state) {
