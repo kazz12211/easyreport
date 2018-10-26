@@ -157,6 +157,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				$req.downloadInvoice(docIds[0])
 			]).then((response) => {
 				console.log(response.data);
+			}, (error) => {
+				$scope.pop.error(error.statusText);
 			});
 			
 			// test code end
