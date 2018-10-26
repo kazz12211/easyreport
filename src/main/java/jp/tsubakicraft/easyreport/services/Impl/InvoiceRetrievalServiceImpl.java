@@ -74,7 +74,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URI_DOCUMENT_BY_ID);
 		builder.queryParam("type", "invoice");
 		String url = builder.build().toString();
-		
+		LOGGER.info(url);
 		
 		HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken();
 		RestTemplate restTemplate = new RestTemplate();
