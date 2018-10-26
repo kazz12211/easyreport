@@ -25,6 +25,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		};
 		
 		$scope.invoicePages = [];
+		$scope.invoices = [];
 		$scope.selectedRows = [];
 		
 		$q.all([
@@ -143,12 +144,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		$scope.download = function() {
 			var docIds = [];
-			for(var i = 0; i < $scope.invoicePages.length; i++) {
-				var page = $scope.invoicePages[i];
-				for(var j = 0; j < page.invoices.length; j++) {
-					var invoice = page.invoices[j];
-					docIds.push(invoice.documentId);
-				}
+			for(var i = 0; i < $scope.selectedRows.length; i++) {
+				invoice = $scope.invoices[i];
+				docIds.push(invoice.documentId);
 			}
 			
 			// test code start
@@ -288,10 +286,12 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		
 		function populateInvoiceTable() {
 			var rows = [];
+			$scope.invoices = [];
 			for(var i = 0; i < $scope.invoicePages.length; i++) {
 				var page = $scope.invoicePages[i];
 				for(var j = 0; j < page.invoices.length; j++) {
 					var invoice = page.invoices[j];
+					$scope.invoices.push(invoice);
 					rows.push([
 						invoice.id || "", 
 						invoice.receiverCompanyName || "", 
