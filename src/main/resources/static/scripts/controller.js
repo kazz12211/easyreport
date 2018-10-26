@@ -147,10 +147,21 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				var page = $scope.invoicePages[i];
 				for(var j = 0; j < page.invoices.length; j++) {
 					var invoice = page.invoices[j];
-					docIds.push(invoice);
+					docIds.push(invoice.documentId);
 				}
 			}
 			
+			// test code start
+			
+			$q.all([
+				$req.downloadInvoice(docIds[0])
+			]).then((response) => {
+				console.log(response.data);
+			});
+			
+			// test code end
+			
+			/*
 			$q.all([
 			    $req.downloadInvoice("1")
 			])
@@ -165,6 +176,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				console.log(error);
 				$scope.pop.error(error.statusText);
 			});
+			*/
 		};
 		
 		function updateDownloadButton() {

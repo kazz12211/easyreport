@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.xml.sax.SAXException;
 
+import jp.tsubakicraft.easyreport.domain.dto.InvoiceDetailDTO;
 import jp.tsubakicraft.easyreport.domain.dto.InvoicePageDTO;
 import jp.tsubakicraft.easyreport.services.InvoiceRetrievalService;
 import jp.tsubakicraft.easyreport.util.DateTimeUtil;
@@ -79,10 +82,20 @@ public class InvoiceController {
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public ResponseEntity<?> downloadInvoice(@RequestParam("id") String docId) {
+	public ResponseEntity<?> downloadInvoice(@RequestParam("id") String docId, final HttpServletResponse response) throws IOException, ParserConfigurationException, SAXException, JSONException {
+		if(tokenService.getAccessTokenFromContext() != null) {
+			InvoiceDetailDTO invoice = invoiceRetrievalService.getInvoiceDetail(docId);
+			return new ResponseEntity(invoice, HttpStatus.OK);
+		} else {
+			LOGGER.info("failed to get list of invoice, access token doesn't exist.", InvoiceController.class);
+			response.sendRedirect(tokenService.getAuthorizationCodeURL());
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
+		/*
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("requestedDocId", docId);
 		return new ResponseEntity(result, HttpStatus.NOT_IMPLEMENTED);
+		*/
 	}
 
 }

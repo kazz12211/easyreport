@@ -1,8 +1,18 @@
 package jp.tsubakicraft.easyreport.services.Impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +30,10 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import jp.tsubakicraft.easyreport.domain.dto.InvoiceDTO;
 import jp.tsubakicraft.easyreport.domain.dto.InvoiceDetailDTO;
@@ -37,11 +51,14 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	TokenService tokenService;
 	
 	private final String URI_LIST_DOCUMENTS;
+	private final String URI_DOCUMENT_BY_ID;
+	
 	
 	@Autowired
 	public InvoiceRetrievalServiceImpl(@Qualifier("propertySources") PropertySources propertySources) {
 		super();
 		URI_LIST_DOCUMENTS = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents";
+        URI_DOCUMENT_BY_ID = propertySources.getTradeshiftAPIDomainName() + "/tradeshift/rest/external/documents/{documentId}";
 	}
 	
 	@Override
@@ -53,10 +70,19 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	}
 
 	@Override
-	public InvoiceDetailDTO getInvoiceDetail(String invoiceId) {
-		// TODO Auto-generated method stub
-		return null;
+	public InvoiceDetailDTO getInvoiceDetail(String invoiceId) throws ParserConfigurationException, SAXException, IOException, JSONException {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URI_DOCUMENT_BY_ID);
+		builder.queryParam("type", "invoice");
+		String url = builder.build().toString();
+		
+		
+		HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken();
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class, invoiceId);
+		Document document = getDocumentFromResponse(responseEntity);
+		return parseInvoice(document);
 	}
+	
 	
 	private InvoiceDTO parseDocument(JSONObject doc) throws JSONException {
 		InvoiceDTO invoice = new InvoiceDTO();
@@ -165,6 +191,79 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 		LOGGER.info("*********** \nResponse conent type: " + responseEntity.getHeaders().getContentType());
 		return responseEntity;
+	}
+
+	private InvoiceDetailDTO parseInvoice(Document document) {
+		InvoiceDetailDTO invoice = new InvoiceDetailDTO();
+		
+		Element root = document.getDocumentElement();
+		invoice.setInvoiceId(objectValue(getElementFromElement(root, "cbc:ID"), String.class));
+		invoice.setIssueDate(objectValue(getElementFromElement(root, "cbc:IssueDate"), Date.class));
+		invoice.setDocumentCurrencyCode(objectValue(getElementFromElement(root, "cbc:DocumentCurrencyCode"), String.class));
+		
+		Element orderReference = getElementFromElement(root, "cac:OrderReference");
+		if(orderReference != null) {
+			invoice.setOrderId(objectValue(getElementFromElement(orderReference, "cdc:ID"), String.class));
+		}
+		return invoice;
+	}
+
+	private static DateFormat _DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+	protected <T> T objectValue(Element element, Class<?> clazz) {
+		if(element == null)
+			return null;
+
+		String text = element.getTextContent();
+		T value = null;
+		if(text != null) {
+			if(clazz.isAssignableFrom(String.class)) {
+				value = (T) text;
+			} else if(clazz.isAssignableFrom(Date.class)) {
+				try {
+					value = (T) _DATE_FORMAT.parse(text);
+				} catch (ParseException e) {
+				}
+			} else if(clazz.isAssignableFrom(Integer.class)) {
+				value =  (T) Integer.valueOf(text);
+			} else if(clazz.isAssignableFrom(Long.class)) {
+				value =  (T) Long.valueOf(text);
+			} else if(clazz.isAssignableFrom(Float.class)) {
+				value =  (T) Float.valueOf(text);
+			} else if(clazz.isAssignableFrom(Double.class)) {
+				value =  (T) Double.valueOf(text);
+			} else if(clazz.isAssignableFrom(Boolean.class)) {
+				value =  (T) Boolean.valueOf(text);
+			} 
+		}
+		
+		return value;
+		
+	}
+	
+	protected String getTextContentFromElement(Element senderElement, String value) {
+        return senderElement.getElementsByTagName(value).item(0).getTextContent();
+    }
+
+    protected Node getNodeFromElement(Element deliveryElement, String value) {
+        return deliveryElement.getElementsByTagName(value).item(0);
+    }
+    
+    protected Element getElementFromElement(Element deliveryElement, String value) {
+    	Node node = getNodeFromElement(deliveryElement, value);
+    	if(node.getNodeType() == Node.ELEMENT_NODE) {
+    		return (Element)node;
+    	}
+    	return null;
+    }
+    
+    protected Element getElementFromDocument(Document document, String value) {
+        return (Element) document.getElementsByTagName(value).item(0);
+    }
+    
+	protected Document getDocumentFromResponse(ResponseEntity responseEntity) throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		return builder.parse(new ByteArrayInputStream(responseEntity.getBody().toString().getBytes()));
 	}
 
 

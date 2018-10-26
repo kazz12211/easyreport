@@ -1,8 +1,13 @@
 package jp.tsubakicraft.easyreport.services;
 
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import jp.tsubakicraft.easyreport.domain.dto.InvoiceDetailDTO;
 import jp.tsubakicraft.easyreport.domain.dto.InvoicePageDTO;
@@ -21,6 +26,6 @@ public interface InvoiceRetrievalService {
 			String[] processStates) throws JSONException;
 	
 
-	InvoiceDetailDTO getInvoiceDetail(String invoiceId);
+	InvoiceDetailDTO getInvoiceDetail(String invoiceId) throws ParserConfigurationException, SAXException, IOException, JSONException;
 
 }
