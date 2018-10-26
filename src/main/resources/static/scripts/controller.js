@@ -142,6 +142,15 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		};
 		
 		$scope.download = function() {
+			var docIds = [];
+			for(var i = 0; i < $scope.invoicePages.length; i++) {
+				var page = $scope.invoicePages[i];
+				for(var j = 0; j < page.invoices.length; j++) {
+					var invoice = page.invoices[j];
+					docIds.push(invoice);
+				}
+			}
+			
 			$q.all([
 			    $req.downloadInvoice("1")
 			])
