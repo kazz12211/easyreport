@@ -145,7 +145,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		$scope.download = function() {
 			var docIds = [];
 			for(var i = 0; i < $scope.selectedRows.length; i++) {
-				invoice = $scope.invoices[i];
+				invoice = $scope.invoices[$scope.selectedRows[i]];
 				docIds.push(invoice.documentId);
 			}
 			
