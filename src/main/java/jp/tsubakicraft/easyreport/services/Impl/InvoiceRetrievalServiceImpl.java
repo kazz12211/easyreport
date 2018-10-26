@@ -197,13 +197,13 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		InvoiceDetailDTO invoice = new InvoiceDetailDTO();
 		
 		Element root = document.getDocumentElement();
-		invoice.setInvoiceId(objectValue(getElementFromElement(root, "cbc:ID"), String.class));
-		invoice.setIssueDate(objectValue(getElementFromElement(root, "cbc:IssueDate"), Date.class));
-		invoice.setDocumentCurrencyCode(objectValue(getElementFromElement(root, "cbc:DocumentCurrencyCode"), String.class));
+		invoice.setInvoiceId(objectValue((Element) getNodeFromElement(root, "cbc:ID"), String.class));
+		invoice.setIssueDate(objectValue((Element) getNodeFromElement(root, "cbc:IssueDate"), Date.class));
+		invoice.setDocumentCurrencyCode(objectValue((Element) getNodeFromElement(root, "cbc:DocumentCurrencyCode"), String.class));
 		
-		Element orderReference = getElementFromElement(root, "cac:OrderReference");
+		Element orderReference = (Element) getNodeFromElement(root, "cac:OrderReference");
 		if(orderReference != null) {
-			invoice.setOrderId(objectValue(getElementFromElement(orderReference, "cdc:ID"), String.class));
+			invoice.setOrderId(objectValue((Element) getNodeFromElement(orderReference, "cdc:ID"), String.class));
 		}
 		return invoice;
 	}
@@ -248,15 +248,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
     protected Node getNodeFromElement(Element deliveryElement, String value) {
         return deliveryElement.getElementsByTagName(value).item(0);
     }
-    
-    protected Element getElementFromElement(Element deliveryElement, String value) {
-    	Node node = getNodeFromElement(deliveryElement, value);
-    	if(node.getNodeType() == Node.ELEMENT_NODE) {
-    		return (Element)node;
-    	}
-    	return null;
-    }
-    
+        
     protected Element getElementFromDocument(Document document, String value) {
         return (Element) document.getElementsByTagName(value).item(0);
     }
