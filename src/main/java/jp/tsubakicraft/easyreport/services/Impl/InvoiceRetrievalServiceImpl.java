@@ -204,12 +204,11 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	private InvoiceDetailDTO parseInvoice(Document document) {
 		InvoiceDetailDTO invoice = new InvoiceDetailDTO();
 		
-		Element root = document.getDocumentElement();
-		invoice.setInvoiceId(objectValue((Element) getNodeFromElement(root, "cbc:ID"), String.class));
-		invoice.setIssueDate(objectValue((Element) getNodeFromElement(root, "cbc:IssueDate"), Date.class));
-		invoice.setDocumentCurrencyCode(objectValue((Element) getNodeFromElement(root, "cbc:DocumentCurrencyCode"), String.class));
+		invoice.setInvoiceId(objectValue(getElementFromDocument(document, "cbc:ID"), String.class));
+		invoice.setIssueDate(objectValue(getElementFromDocument(document, "cbc:IssueDate"), Date.class));
+		invoice.setDocumentCurrencyCode(objectValue(getElementFromDocument(document, "cbc:DocumentCurrencyCode"), String.class));
 		
-		Element orderReference = (Element) getNodeFromElement(root, "cac:OrderReference");
+		Element orderReference = getElementFromDocument(document, "cac:OrderReference");
 		if(orderReference != null) {
 			invoice.setOrderId(objectValue((Element) getNodeFromElement(orderReference, "cdc:ID"), String.class));
 		}
