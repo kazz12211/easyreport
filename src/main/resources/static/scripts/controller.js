@@ -167,14 +167,14 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			};			
 		}
 		
-		function loadInvoice(documentId) {
+		function loadInvoice(documentId, callback) {
 			$q.all(
 				[$req.loadInvoice(documentId)]
 			).then((response) => {
-				return response.data;
+				callback(response.data);
 			}, (error) => {
 				$scope.pop.error(error.status);
-				return null;
+				callback(null);
 			});
 		}
 		
@@ -323,9 +323,15 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			$scope.invoiceTable.status(status);
 			$scope.invoiceTable.onbutton = (name, value, rowindex, cellindex) => {
 				if(name === 'showDetail') {
-					$scope.invoiceDetail = loadInvoice(value);
-					console.log($scope.invoiceDetail);
-					$scope.ui.get('#invoiceDetailAside').open();
+					loadInvoice(value, (response) => {
+						console.log(response);
+						if(response === null || response == undefined) {
+							$scope.invoiceDetail = {};
+						} else {
+							$scope.invoiceDetail = response;
+							$scope.ui.get('#invoiceDetailAside').open();
+						}
+					});
 				}
 			};
 
