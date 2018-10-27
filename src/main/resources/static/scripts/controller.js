@@ -1,67 +1,118 @@
-app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $window, $timeout, $translate) {
+app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, $timeout, $translate) => {
 	$scope.ui = ts.ui;
-	
-	$scope.ui.ready(function() {
+	$scope.showTab = 0;
+	$scope.fetchLimits = {invoice:100};
+	$scope.fetchLimit = $scope.fetchLimits.invoice;
+	$scope.queryParam = {};
+	$scope.invoices = [];
+	$scope.selectedRows = [];
+	var strings = [
+		"Tab.Invoice", 
+        "Table.ID",
+        "Table.ReceiverCompany",
+        "Table.SenderCompany",
+        "Table.Description",
+        "Table.Total",
+        "Table.Currency",
+        "Table.IssueDate",
+        "Table.State",
+        "Table.Selected",
+        "Table.RecordsHit",
+        "Table.Action",
+        "Table.Detail",
+        "Stag.Inbox",
+        "Stag.Outbox",
+        "ProcessState.Pending",
+        "ProcessState.Invoiced",
+        "ProcessState.Overdue",
+        "ProcessState.Accepted",
+        "ProcessState.Paid",
+        "ProcessState.Rejected",
+        "ProcessState.Disputed",
+        "Index.Download",
+        "Param.FetchLimitIs",
+        "Param.Records",
+        "Index.Searching",
+        "Error.InvalidResponse",
+        "Error.InvalidContentType",
+        "Error.FailedToFetchInvoices"
+       ];
+
+	$scope.ui.ready(() => {
 		
 		$scope.topbar = $scope.ui.TopBar;
-		$scope.invoiceTable = ts.ui.get("#invoice-table");
-		$scope.pop = ts.ui.Notification;
-		$scope.showTab = 0;
 		$scope.popup = ts.ui.Notification;
 		$scope.locale;
-		$scope.fetchLimits = {invoice:500};
-		$scope.fetchLimit = $scope.fetchLimits.invoice;
-		
-		$scope.queryParam = {
-			stag: "inbox", 
-			minIssueDate: "", 
-			maxIssueDate: "", 
-			createdBefore: "", 
-			createdAfter: "", 
-			processStates: [], 
-			limit: $scope.fetchLimit, 
-			page: 0,
-			tzOffset: getTzOffset()
-		};
-		
-		$scope.invoicePages = [];
-		$scope.invoices = [];
-		$scope.selectedRows = [];
-		
+				
 		$q.all([
-		    $translate(["Tab.Invoice", 
-		                "Table.ID", "Table.ReceiverCompany", "Table.SenderCompany", "Table.Description", "Table.Total", "Table.Currency", "Table.IssueDate", "Table.State",
-		                "Stag.Inbox", "Stag.Outbox",
-		                "ProcessState.Pending", "ProcessState.Invoiced", "ProcessState.Overdue", "ProcessState.Accepted", "ProcessState.Paid", "ProcessState.Rejected", "ProcessState.Disputed",
-		                "Index.Download",
-		                "Table.RecordsHit",
-		                "Param.FetchLimitIs", "Param.Records",
-		                "Index.Searching",
-		                "Error.InvalidResponse", "Error.InvalidContentType", "Error.FailedToFetchInvoices",
-		                "Table.Selected", "Table.Action", "Table.Detail"]),
+		    $translate([strings]),
 		    $req.getParams()
 		])
-		.then(function(response) {
-			var locale = response[0];
-			$scope.locale = locale;
+		.then((response) => {
+			$scope.locale = response[0];
 			$scope.fetchLimits = response[1].data;
 			$scope.fetchLimit = $scope.fetchLimits.invoice || 100;
+			
+			initParams();
+			initStagOptions();
+			initStateOptions();
 			
 			$scope.ui.Header.title('Easy Report');
 			$scope.topbar.tabs([{
 				label: locale["Tab.Invoice"],
 				id: "tab0",
-				onselect: function() {
+				onselect: () => {
 					$scope.showTab = 0;
 					$scope.$apply();
 					scrollTo(0, 0);
 				}
 			}]);
 			
+			
+			initTable();
+			
+			updateDownloadButton();
+		});
+		
+		$scope.submitForm = () => {
+			$scope.queryParam.page = 0;
+			searchInvoices();
+		};
+		
+		
+		$scope.clearForm = function() {
+			initParams();
+
+			$scope.selectedRows = [];
+			$scope.invoiceTable.rows([]);
+			$scope.invoiceTable.pager({pages:0});
+			$scope.invoiceTable.status('');
+			$('#stateOptions option').prop('selected', false);
+			updateDownloadButton();
+		};
+
+		function initParams() {
+			$scope.queryParam = {
+				stag: "inbox", 
+				minIssueDate: "", 
+				maxIssueDate: "", 
+				createdBefore: "", 
+				createdAfter: "", 
+				processStates: [], 
+				limit: $scope.fetchLimit, 
+				page: 0,
+				tzOffset: getTzOffset()
+			};
+		}
+		
+		function initStagOptions() {
 			$scope.stagOptions = [
 			    { value : "inbox", text : locale["Stag.Inbox"] },
 			    { value : "outbox", text : locale["Stag.Outbox"] }
 			];
+		}
+		
+		function initStateOptions() {
 			$scope.stateOptions = [
 			    { value : "PENDING", text : locale["ProcessState.Pending"] },
 			    { value : "INVOICED", text : locale["ProcessState.Invoiced"] },
@@ -71,7 +122,10 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			    { value : "REJECTED", text : locale["ProcessState.Rejected"] },
 			    { value : "DISPUTED", text : locale["ProcessState.Disputed"] }
 			];
-			
+		}
+		
+		function initTable() {
+			$scope.invoiceTable = ts.ui.get("#invoice-table");
 			$scope.invoiceTable.cols([{
 				label: locale["Table.ID"], flex: 2
 			},{
@@ -98,11 +152,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			.selectable()
 			.buttons([
 				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
-					$scope.download();
+					download();
 				}}
 			]) 
 			.max(10).sort(0, true);	
-			$scope.invoiceTable.onselect = function(selected, unselected) {
+			$scope.invoiceTable.onselect = (selected, unselected) => {
 				$scope.selectedRows = $scope.invoiceTable.selected();
 				updateDownloadButton();
 				var status = $scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"];
@@ -110,40 +164,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					status = status + " " + $scope.selectedRows.length + " " + $scope.locale["Table.Selected"];
 				}
 				$scope.invoiceTable.status(status);
-			};
-			
-			updateDownloadButton();
-		});
-		
-		$scope.submitForm = function() {
-			
-			$scope.queryParam.page = 0;
-			$scope.selectedRows = [];
-			searchInvoices();
-			
-		};
-
-		$scope.clearForm = function() {
-			$scope.queryParam = {
-				stag: "inbox", 
-				minIssueDate: "", 
-				maxIssueDate: "", 
-				createdBefore: "", 
-				createdAfter: "", 
-				processStates: [], 
-				limit: $scope.fetchLimit, 
-				page: 0,
-				tzOffset: getTzOffset()
-			};
-
-			$scope.invoicePage = {};
-			$scope.selectedRows = [];
-			$scope.invoiceTable.rows([]);
-			$scope.invoiceTable.pager({pages:0});
-			$scope.invoiceTable.status('');
-			$('#stateOptions option').prop('selected', false);
-			updateDownloadButton();
-		};
+			};			
+		}
 		
 		function loadInvoice(documentId) {
 			$q.all(
@@ -157,42 +179,9 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		}
 		
 		
-		$scope.download = function() {
-			var docIds = [];
-			for(var i = 0; i < $scope.selectedRows.length; i++) {
-				invoice = $scope.invoices[$scope.selectedRows[i]];
-				docIds.push(invoice.documentId);
-			}
-			
-			// test code start
-			
-			$q.all([
-				$req.downloadInvoice(docIds[0])
-			]).then((response) => {
-				console.log(response);
-			}, (error) => {
-				$scope.pop.error(error.statusText);
-			});
-			
-			// test code end
-			
-			/*
-			$q.all([
-			    $req.downloadInvoice("1")
-			])
-			.then(function(response) {
-				console.log(response.data);			
-				if(response.status == 200) {
-					
-				} else {
-					$scope.pop.error(response.statusText);
-				}
-			}, function(error) {
-				console.log(error);
-				$scope.pop.error(error.statusText);
-			});
-			*/
-		};
+		
+		function download() {
+		}
 		
 		function updateDownloadButton() {
 			var button = $scope.invoiceTable.buttons()[0];
@@ -248,11 +237,11 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		function searchInvoices() {
 			blockUserInteraction($scope.locale['Index.Searching']);
 			
-			$scope.invoicePages = [];
+			$scope.selectedRows = [];
 			$scope.numPages = 0;
-			
+			var pages = [];
 			retrieveInvoicePage($scope.queryParam, (response) => {
-				$scope.invoicePages.push(response);
+				pages.push(response);
 				var numPages = response.numPages;
 				if(numPages > 1) {
 					var params = [];
@@ -266,7 +255,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					params.forEach((param) => {
 						promise = promise.finally(() => {
 							return retrieveInvoicePage(param, (response) => {
-								$scope.invoicePages.push(response);
+								pages.push(response);
 							}, (error) => {
 								$scope.pop.error(error);
 							});
@@ -275,13 +264,13 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 					});
 					
 					promise.finally(() => {
-						populateInvoiceTable();
+						populateInvoiceTable(pages);
 						unblockUserInteraction();
 					});
 					
 					deferred.resolve();
 				} else {
-					populateInvoiceTable();
+					populateInvoiceTable(pages);
 					unblockUserInteraction();
 				}
 			}, (error) => {
@@ -299,32 +288,41 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			return "";
 		}
 		
-		function populateInvoiceTable() {
-			var rows = [];
+		function populateInvoices(pages) {
 			$scope.invoices = [];
-			for(var i = 0; i < $scope.invoicePages.length; i++) {
-				var page = $scope.invoicePages[i];
+			for(var i = 0; i < pages.length; i++) {
+				var page = pages[i];
 				for(var j = 0; j < page.invoices.length; j++) {
 					var invoice = page.invoices[j];
 					$scope.invoices.push(invoice);
-					rows.push([
-						invoice.id || "", 
-						invoice.receiverCompanyName || "", 
-						invoice.senderCompanyName || "", 
-						invoice.description || "", 
-						invoice.total, 
-						invoice.currency || "", 
-						invoice.issueDate || "", 
-						localizedStateString(invoice.state),
-						getButton(locale["Table.Detail"], "Detail", invoice.documentId)
-					]);
-				}				
+				}
+			}
+		}
+		
+		function populateInvoiceTable(pages) {
+			var rows = [];
+
+			populateInvoices(pages);
+
+			for(var i = 0; i < $scope.invoices.length; i++) {
+				const invoice = invoices[i];
+				rows.push([
+					invoice.id || "", 
+					invoice.receiverCompanyName || "", 
+					invoice.senderCompanyName || "", 
+					invoice.description || "", 
+					invoice.total, 
+					invoice.currency || "", 
+					invoice.issueDate || "", 
+					localizedStateString(invoice.state),
+					getButton(locale["Table.Detail"], "showDetail", invoice.documentId)
+				]);
 			}
 			$scope.invoiceTable.rows(rows).max(10);
 			var status = $scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"];
 			$scope.invoiceTable.status(status);
-			$scope.invoiceTable.onbutton = function(name, value, rowindex, cellindex) {
-				if(name === 'Detail') {
+			$scope.invoiceTable.onbutton = (name, value, rowindex, cellindex) => {
+				if(name === 'showDetail') {
 					$scope.invoiceDetail = loadInvoice(value);
 					console.log($scope.invoiceDetail);
 					$scope.ui.get('#invoiceDetailAside').open();
@@ -332,22 +330,6 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			};
 
 		}
-		
 	
-		function getTzOffset() {
-			var date = new Date();
-			return (date.getHours() - date.getUTCHours() + 24) % 24;
-		}
-	
-		function getbutton(label, name, value) {
-			return {
-				item: 'Button',
-				type: 'ts-secondary ts-micro',
-				label: label,
-				name: name,
-				value: value
-			};
-		}
-	);
 	});
 });
