@@ -154,7 +154,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				$scope.pop.error(error.status);
 				return null;
 			});
-		};
+		}
 		
 		
 		$scope.download = function() {
@@ -346,6 +346,8 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				label: label,
 				name: name,
 				value: value
+			};
 		}
+	);
 	});
 });
