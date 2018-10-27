@@ -171,10 +171,10 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			$q.all(
 				[$req.loadInvoice(documentId)]
 			).then((response) => {
-				const invoice = response.data;
+				const invoice = response[0].data;
 				callback(invoice);
 			}, (response) => {
-				$scope.pop.error(response.status);
+				$scope.pop.error(response[0].status);
 				callback(null);
 			});
 		}
