@@ -45,7 +45,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 		$scope.locale;
 				
 		$q.all([
-		    $translate([strings]),
+		    $translate(strings),
 		    $req.getParams()
 		])
 		.then((response) => {
