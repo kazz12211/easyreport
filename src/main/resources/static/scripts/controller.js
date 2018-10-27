@@ -305,7 +305,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			populateInvoices(pages);
 
 			for(var i = 0; i < $scope.invoices.length; i++) {
-				const invoice = invoices[i];
+				const invoice = $scope.invoices[i];
 				rows.push([
 					invoice.id || "", 
 					invoice.receiverCompanyName || "", 
