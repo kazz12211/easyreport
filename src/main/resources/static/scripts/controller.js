@@ -315,7 +315,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 					invoice.currency || "", 
 					invoice.issueDate || "", 
 					localizedStateString(invoice.state),
-					getButton($scope.locale["Table.Detail"], "showDetail", invoice.documentId)
+					getbutton($scope.locale["Table.Detail"], "showDetail", invoice.documentId)
 				]);
 			}
 			$scope.invoiceTable.rows(rows).max(10);
