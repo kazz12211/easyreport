@@ -43,6 +43,9 @@ app.factory('$req', function($http, $location) {
 		downloadInvoice: function(docId) {
 			return $http.get(url + "invoice/download", { params : {id : docId} });
 		},
+		loadInvoice: function(docId) {
+			return $http.get(url + "invoice/load", { params : {id : docId} });
+		},
 		getParams: function() {
 			return $http.get(url + "init/params", {});
 		},

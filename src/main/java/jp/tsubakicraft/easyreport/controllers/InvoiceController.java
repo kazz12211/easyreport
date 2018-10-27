@@ -103,4 +103,20 @@ public class InvoiceController {
 		*/
 	}
 
+	@RequestMapping(value = "/load", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	public ResponseEntity<?> loadInvoice(@RequestParam("id") String docId, final HttpServletResponse response) throws IOException, ParserConfigurationException, SAXException, JSONException {
+		if(tokenService.getAccessTokenFromContext() != null) {
+			try {
+				InvoiceDetailDTO invoice = invoiceRetrievalService.getInvoiceDetail(docId);
+				return new ResponseEntity(invoice, HttpStatus.OK);
+			} catch (Exception e) {
+				LOGGER.error("Server error", e);
+				return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} else {
+			LOGGER.info("failed to get list of invoice, access token doesn't exist.", InvoiceController.class);
+			response.sendRedirect(tokenService.getAuthorizationCodeURL());
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
+	}
 }

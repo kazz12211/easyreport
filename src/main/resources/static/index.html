@@ -17,7 +17,7 @@
 </head>
 <body ng-app="app" ng-controller="invoiceController">
 <div data-ts="App">
-	<main data-ts="Main">
+	<div data-ts="Main">
 	<div data-ts="Content">
 	<div data-ts="Panel">
 	<div id="tab0" ng-show="showTab == 0">
@@ -69,7 +69,11 @@
 	</div>
 	</div>
 	</div>
-	</main>
+	</div>
+	<aside data-ts="Aside" data-ts.open="false" id="invoiceDetailAside">
+		<div data-ts="Panel">
+		</div>
+	</aside>
 </div>
 </body>
 </html>

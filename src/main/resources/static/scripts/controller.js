@@ -38,7 +38,7 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 		                "Param.FetchLimitIs", "Param.Records",
 		                "Index.Searching",
 		                "Error.InvalidResponse", "Error.InvalidContentType", "Error.FailedToFetchInvoices",
-		                "Table.Selected"]),
+		                "Table.Selected", "Table.Action", "Table.Detail"]),
 		    $req.getParams()
 		])
 		.then(function(response) {
@@ -88,7 +88,10 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 				label: locale["Table.IssueDate"], flex:2
 			}, {
 				label: locale["Table.State"], flex:1
-			}])
+			}, { 
+				label: locale["Table.Action"], flex:1
+			}
+			])
 			.sortable(function(index, ascending) {
 				$scope.invoiceTable.sort(index, ascending);
 			})
@@ -141,6 +144,18 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			$('#stateOptions option').prop('selected', false);
 			updateDownloadButton();
 		};
+		
+		function loadInvoice(documentId) {
+			$q.all(
+				[$req.loadInvoice(documentId)]
+			).then((response) => {
+				return response.data;
+			}, (error) => {
+				$scope.pop.error(error.status);
+				return null;
+			});
+		};
+		
 		
 		$scope.download = function() {
 			var docIds = [];
@@ -300,13 +315,22 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 						invoice.total, 
 						invoice.currency || "", 
 						invoice.issueDate || "", 
-						localizedStateString(invoice.state)
+						localizedStateString(invoice.state),
+						getButton(locale["Table.Detail"], "Detail", invoice.documentId)
 					]);
 				}				
 			}
 			$scope.invoiceTable.rows(rows).max(10);
 			var status = $scope.invoiceTable.rows().length + " " + $scope.locale["Table.RecordsHit"];
 			$scope.invoiceTable.status(status);
+			$scope.invoiceTable.onbutton = function(name, value, rowindex, cellindex) {
+				if(name === 'Detail') {
+					$scope.invoiceDetail = loadInvoice(value);
+					console.log($scope.invoiceDetail);
+					$scope.ui.get('#invoiceDetailAside').open();
+				}
+			};
+
 		}
 		
 	
@@ -315,6 +339,13 @@ app.controller("invoiceController", function($scope, $http, $req, $q, $filter, $
 			return (date.getHours() - date.getUTCHours() + 24) % 24;
 		}
 	
-		
+		function getbutton(label, name, value) {
+			return {
+				item: 'Button',
+				type: 'ts-secondary ts-micro',
+				label: label,
+				name: name,
+				value: value
+		}
 	});
 });

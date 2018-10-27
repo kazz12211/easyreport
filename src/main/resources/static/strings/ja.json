@@ -47,7 +47,9 @@
 		"IssueDate" : "発行日",
 		"State" : "ステータス",
 		"RecordsHit": "件がヒット",
-		"Selected": "件が選択中"
+		"Selected": "件が選択中",
+		"Action": "アクション",
+		"Detail": "詳細"
 	},
 	"Param" : {
 		"FetchLimitIs": "表示する件数の上限は",
