@@ -40,6 +40,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import jp.tsubakicraft.easyreport.domain.dto.InvoiceDTO;
@@ -88,7 +89,9 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class, invoiceId);
 		Document document = getDocumentFromResponse(responseEntity);
 		logDocument(document);
-		return parseInvoice(document);
+		InvoiceDetailDTO detail = parseInvoice(document);
+		detail.setDocumentId(invoiceId);
+		return detail;
 	}
 	
 	
@@ -204,11 +207,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	private InvoiceDetailDTO parseInvoice(Document document) {
 		InvoiceDetailDTO invoice = new InvoiceDetailDTO();
 		
-		Element ext = getElementFromDocument(document, "ext:UBLExtensions");
-		if(ext != null) {
-			document.removeChild(ext);
-		}
-		invoice.setInvoiceId(objectValue(getElementFromDocument(document, "cbc:ID"), String.class));
+		invoice.setInvoiceId(objectValue(getChildElementFromDocument(document, "cbc:ID"), String.class));
 		invoice.setIssueDate(objectValue(getElementFromDocument(document, "cbc:IssueDate"), Date.class));
 		invoice.setDocumentCurrencyCode(objectValue(getElementFromDocument(document, "cbc:DocumentCurrencyCode"), String.class));
 		
@@ -262,6 +261,18 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
         
     protected Element getElementFromDocument(Document document, String value) {
         return (Element) document.getElementsByTagName(value).item(0);
+    }
+    
+    protected Element getChildElementFromDocument(Document document, String value) {
+    	NodeList list = document.getElementsByTagName(value);
+    	int numElements = list.getLength();
+    	for(int i = 0; i < numElements; i++) {
+    		Node node = list.item(i);
+    		if(node.getParentNode() == document.getDocumentElement()) {
+    			return (Element)node;
+    		}
+    	}
+    	return null;
     }
     
 	protected Document getDocumentFromResponse(ResponseEntity responseEntity) throws ParserConfigurationException, SAXException, IOException {

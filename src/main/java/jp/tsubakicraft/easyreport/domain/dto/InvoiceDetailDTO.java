@@ -8,6 +8,7 @@ public class InvoiceDetailDTO {
 	private Date issueDate;
 	private String documentCurrencyCode;
 	private String orderId;
+	private String documentId;
 	
 	public String getInvoiceId() {
 		return invoiceId;
@@ -40,5 +41,14 @@ public class InvoiceDetailDTO {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
+
+	public String getDocumentId() {
+		return documentId;
+	}
+	
+	public void setDocumentId(String documentId) {
+		this.documentId = documentId;
+	}
+	
 
 }
