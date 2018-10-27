@@ -2,6 +2,7 @@ package jp.tsubakicraft.easyreport.services.Impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,6 +14,12 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,6 +87,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<?> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class, invoiceId);
 		Document document = getDocumentFromResponse(responseEntity);
+		logDocument(document);
 		return parseInvoice(document);
 	}
 	
@@ -258,5 +266,18 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		return builder.parse(new ByteArrayInputStream(responseEntity.getBody().toString().getBytes()));
 	}
 
+	protected void logDocument(Document document) {
+		StringWriter sw = new StringWriter();
+		TransformerFactory factory = TransformerFactory.newInstance();
+		try {
+			Transformer transformer = factory.newTransformer();
+			transformer.transform(new DOMSource(document), new StreamResult(sw));
+			String string = sw.toString();
+			LOGGER.info(string);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 }
