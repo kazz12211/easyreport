@@ -174,7 +174,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 				const invoice = response[0].data;
 				callback(invoice);
 			}, (response) => {
-				$scope.pop.error(response[0].status);
+				$scope.popup.error(response[0].status);
 				callback(null);
 			});
 		}
@@ -258,7 +258,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 							return retrieveInvoicePage(param, (response) => {
 								pages.push(response);
 							}, (error) => {
-								$scope.pop.error(error);
+								$scope.popup.error(error);
 							});
 						});
 
@@ -275,7 +275,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 					unblockUserInteraction();
 				}
 			}, (error) => {
-				$scope.pop.error(error);
+				$scope.popup.error(error);
 				unblockUserInteraction();
 			}); 
 		}
