@@ -324,7 +324,9 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			$scope.invoiceTable.status(status);
 			$scope.invoiceTable.onbutton = (name, value, rowindex, cellindex) => {
 				if(name === 'showDetail') {
+					blockUserInteraction($scope.locale['Index.Searching']);
 					loadInvoice(value, (response) => {
+						unblockUserInteraction();
 						console.log(response);
 						if(response === null || response == undefined) {
 							$scope.invoiceDetail = {};
