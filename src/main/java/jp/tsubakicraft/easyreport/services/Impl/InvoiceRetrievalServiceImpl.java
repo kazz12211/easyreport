@@ -204,6 +204,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 	private InvoiceDetailDTO parseInvoice(Document document) {
 		InvoiceDetailDTO invoice = new InvoiceDetailDTO();
 		
+		document.removeChild(getElementFromDocument(document, "ext:UBLExtensions"));
 		invoice.setInvoiceId(objectValue(getElementFromDocument(document, "cbc:ID"), String.class));
 		invoice.setIssueDate(objectValue(getElementFromDocument(document, "cbc:IssueDate"), Date.class));
 		invoice.setDocumentCurrencyCode(objectValue(getElementFromDocument(document, "cbc:DocumentCurrencyCode"), String.class));
