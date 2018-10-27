@@ -59,7 +59,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			
 			$scope.ui.Header.title('Easy Report');
 			$scope.topbar.tabs([{
-				label: locale["Tab.Invoice"],
+				label: $scope.locale["Tab.Invoice"],
 				id: "tab0",
 				onselect: () => {
 					$scope.showTab = 0;
@@ -107,43 +107,43 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 		
 		function initStagOptions() {
 			$scope.stagOptions = [
-			    { value : "inbox", text : locale["Stag.Inbox"] },
-			    { value : "outbox", text : locale["Stag.Outbox"] }
+			    { value : "inbox", text : $scope.locale["Stag.Inbox"] },
+			    { value : "outbox", text : $scope.locale["Stag.Outbox"] }
 			];
 		}
 		
 		function initStateOptions() {
 			$scope.stateOptions = [
-			    { value : "PENDING", text : locale["ProcessState.Pending"] },
-			    { value : "INVOICED", text : locale["ProcessState.Invoiced"] },
-			    { value : "OVERDUE", text : locale["ProcessState.Overdue"] },
-			    { value : "ACCEPTED", text : locale["ProcessState.Accepted"] },
-			    { value : "PAID", text : locale["ProcessState.Paid"] },
-			    { value : "REJECTED", text : locale["ProcessState.Rejected"] },
-			    { value : "DISPUTED", text : locale["ProcessState.Disputed"] }
+			    { value : "PENDING", text : $scope.locale["ProcessState.Pending"] },
+			    { value : "INVOICED", text : $scope.locale["ProcessState.Invoiced"] },
+			    { value : "OVERDUE", text : $scope.locale["ProcessState.Overdue"] },
+			    { value : "ACCEPTED", text : $scope.locale["ProcessState.Accepted"] },
+			    { value : "PAID", text : $scope.locale["ProcessState.Paid"] },
+			    { value : "REJECTED", text : $scope.locale["ProcessState.Rejected"] },
+			    { value : "DISPUTED", text : $scope.locale["ProcessState.Disputed"] }
 			];
 		}
 		
 		function initTable() {
 			$scope.invoiceTable = ts.ui.get("#invoice-table");
 			$scope.invoiceTable.cols([{
-				label: locale["Table.ID"], flex: 2
+				label: $scope.locale["Table.ID"], flex: 2
 			},{
-				label: locale["Table.ReceiverCompany"], flex: 3
+				label: $scope.locale["Table.ReceiverCompany"], flex: 3
 			}, {
-				label: locale["Table.SenderCompany"], flex: 3
+				label: $scope.locale["Table.SenderCompany"], flex: 3
 			}, {
-				label: locale["Table.Description"], flex: 4
+				label: $scope.locale["Table.Description"], flex: 4
 			}, {
-				label: locale["Table.Total"], type: "ts-number", flex: 2
+				label: $scope.locale["Table.Total"], type: "ts-number", flex: 2
 			}, {
-				label: locale["Table.Currency"], flex:1
+				label: $scope.locale["Table.Currency"], flex:1
 			}, {
-				label: locale["Table.IssueDate"], flex:2
+				label: $scope.locale["Table.IssueDate"], flex:2
 			}, {
-				label: locale["Table.State"], flex:1
+				label: $scope.locale["Table.State"], flex:1
 			}, { 
-				label: locale["Table.Action"], flex:1
+				label: $scope.locale["Table.Action"], flex:1
 			}
 			])
 			.sortable(function(index, ascending) {
@@ -151,7 +151,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			})
 			.selectable()
 			.buttons([
-				{label: locale["Index.Download"], type:'ts-primary', onclick: () => {
+				{label: $scope.locale["Index.Download"], type:'ts-primary', onclick: () => {
 					download();
 				}}
 			]) 
@@ -315,7 +315,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 					invoice.currency || "", 
 					invoice.issueDate || "", 
 					localizedStateString(invoice.state),
-					getButton(locale["Table.Detail"], "showDetail", invoice.documentId)
+					getButton($scope.locale["Table.Detail"], "showDetail", invoice.documentId)
 				]);
 			}
 			$scope.invoiceTable.rows(rows).max(10);
