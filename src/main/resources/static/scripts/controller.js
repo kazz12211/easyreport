@@ -172,8 +172,8 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 				[$req.loadInvoice(documentId)]
 			).then((response) => {
 				callback(response.data);
-			}, (error) => {
-				$scope.pop.error(error.status);
+			}, (response) => {
+				$scope.pop.error(response.status);
 				callback(null);
 			});
 		}
