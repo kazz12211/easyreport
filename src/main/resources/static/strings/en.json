@@ -59,6 +59,14 @@
 		"InvalidResponse": "Invalid response. HTTP Status: ",
 		"InvalidContentType": "Invalid content-type. content-type: ",
 		"FailedToFetchInvoices": "Failed to fetch invoices: "
+	},
+	"Invoice": {
+		"ID": "Invoice #",
+		"IssueDate": "Issue Date",
+		"Currency": "Currency",
+		"TaxInclusiveAmount" : "Tax Incl. Amount",
+		"Customer": "Customer",
+		"Supplier": "Supplier"
 	}
 	
 }

@@ -59,6 +59,14 @@
 		"InvalidResponse": "不正なレスポンスです。 HTTPステータス: ",
 		"InvalidContentType": "不正な内容です。 データの種類: ",
 		"FailedToFetchInvoices": "請求書の検索に失敗しました。: "
+	},
+	"Invoice": {
+		"ID": "請求書番号",
+		"IssueDate": "発行日",
+		"Currency": "通貨",
+		"TaxInclusiveAmount" : "税込み金額",
+		"Customer": "買い手",
+		"Supplier": "売り手"
 	}
 	
 }
