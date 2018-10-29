@@ -334,7 +334,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		Element invoicedQuantityElem = XMLUtil.getElementFromElement(element, "cbc:InvoicedQuantity");
 		if(invoicedQuantityElem != null) {
 			invoiceLine.setCurrency(invoicedQuantityElem.getAttribute("currencyID"));
-			invoiceLine.setInvoicedQuantity(objectValue(invoicedQuantityElem, Float.class));
+			invoiceLine.setInvoicedQuantity(objectValue(invoicedQuantityElem, Integer.class));
 		}
 		invoiceLine.setTaxTotal(parseTaxTotal(XMLUtil.getElementFromElement(element, "cac:TaxTotal")));
 		Element itemElem = XMLUtil.getElementFromElement(element, "cac:Item");
