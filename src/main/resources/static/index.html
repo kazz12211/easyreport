@@ -73,30 +73,36 @@
 	</div>
 	<aside data-ts="Aside" data-ts.open="false" id="invoiceDetailAside" style='width:400px'>
 		<div data-ts="Panel">
-			<form data-ts="Form" data-ts.preview="true">
+			<form data-ts="Form">
 				<label>
 					<span translate="Invoice.ID">Invoice #</span>
-					<input type="text" ng-model="invoiceDetail.invoiceId"/>
+					<input type="text" readonly ng-model="invoiceDetail.invoiceId"/>
 				</label>
 				<label>
 					<span translate="Invoice.IssueDate">Issue Date</span>
-					<input type="text" ng-model="invoiceDetail.issueDate"/>
+					<input type="text" readonly ng-model="invoiceDetail.issueDate"/>
 				</label>
 				<label>
 					<span translate="Invoice.Currency">Currency</span>
-					<input type="text" ng-model="invoiceDetail.documentCurrencyCode"/>
+					<input type="text" readonly ng-model="invoiceDetail.documentCurrencyCode"/>
 				</label>
 				<label>
 					<span translate="Invoice.TaxInclusiveAmount">Tax Incl. Amount</span>
-					<input type="text" ng-model="invoiceDetail.legalMonetaryTotal.taxInclusiveAmount"/>
+					<input type="text" readonly ng-model="invoiceDetail.legalMonetaryTotal.taxInclusiveAmount"/>
 				</label>
+				<br/>
 				<label>
 					<span translate="Invoice.Customer">Customer</span>
-					<input type="text" ng-model="invoiceDetail.accountingCustomerParty.contact.name"/>
+					<input type="text" readonly ng-model="invoiceDetail.accountingCustomerParty.contact.name"/>
 				</label>
+				<br/>
 				<label>
 					<span translate="Invoice.Supplier">Supplier</span>
-					<input type="text" ng-model="invoiceDetail.accountingSupplierParty.contact.name"/>
+					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.contact.name"/>
+				</label>
+				<label>
+					<span translate="Invoice.Contact">Contact</span>
+					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.person.familyName + ' ' + invoiceDetail.accountingSupplierParty.person.firstName"/>
 				</label>
 			</form>
 		</div>
