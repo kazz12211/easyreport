@@ -67,7 +67,8 @@
 		"TaxInclusiveAmount" : "税込み金額",
 		"Buyer": "買い手",
 		"Supplier": "売り手",
-		"Contact": "担当者"
+		"Contact": "担当者",
+		"InvoiceLine": "明細"
 	}
 	
 }

@@ -67,7 +67,8 @@
 		"TaxInclusiveAmount" : "Tax Incl. Amount",
 		"Buyer": "Customer",
 		"Supplier": "Supplier",
-		"Contact": "Contact"
+		"Contact": "Contact",
+		"InvoiceLine": "Invoice Line"
 	}
 	
 }
