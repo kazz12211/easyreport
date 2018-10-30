@@ -71,7 +71,7 @@
 	</div>
 	</div>
 	</div>
-	<aside data-ts="Aside" data-ts.open="false" id="invoiceDetailAside">
+	<aside data-ts="Aside" data-ts.open="false" id="invoiceDetailAside" style="width:440px">
 		<div data-ts="Panel" style='width:400px'>
 			<form data-ts="Form">
 				<label>
@@ -107,6 +107,11 @@
 				<label>
 					<span translate="Invoice.Contact">Contact</span>
 					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.contact.name"/>
+				</label>
+				<br/>
+				<label>
+					<span translate="Invoice.InvoiceLine">Invoie Line</span>
+					<input type="text" readonly ng-model="invoiceDetail.invoiceLines[0].itemName"/>
 				</label>
 			</form>
 		</div>
