@@ -71,8 +71,8 @@
 	</div>
 	</div>
 	</div>
-	<aside data-ts="Aside" data-ts.open="false" id="invoiceDetailAside" style='width:400px'>
-		<div data-ts="Panel">
+	<aside data-ts="Aside" data-ts.open="false" id="invoiceDetailAside">
+		<div data-ts="Panel" style='width:400px'>
 			<form data-ts="Form">
 				<label>
 					<span translate="Invoice.ID">Invoice #</span>
@@ -92,17 +92,21 @@
 				</label>
 				<br/>
 				<label>
-					<span translate="Invoice.Customer">Customer</span>
+					<span translate="Invoice.Buyer">Buyer</span>
+					<input type="text" readonly ng-model="invoiceDetail.accountingCustomerParty.name"/>
+				</label>
+				<label>
+					<span translate="Invoice.Contact">Contact</span>
 					<input type="text" readonly ng-model="invoiceDetail.accountingCustomerParty.contact.name"/>
 				</label>
 				<br/>
 				<label>
 					<span translate="Invoice.Supplier">Supplier</span>
-					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.contact.name"/>
+					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.name"/>
 				</label>
 				<label>
 					<span translate="Invoice.Contact">Contact</span>
-					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.person.familyName + ' ' + invoiceDetail.accountingSupplierParty.person.firstName"/>
+					<input type="text" readonly ng-model="invoiceDetail.accountingSupplierParty.contact.name"/>
 				</label>
 			</form>
 		</div>

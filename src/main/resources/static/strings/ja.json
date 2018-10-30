@@ -65,8 +65,9 @@
 		"IssueDate": "発行日",
 		"Currency": "通貨",
 		"TaxInclusiveAmount" : "税込み金額",
-		"Customer": "買い手",
-		"Supplier": "売り手"
+		"Buyer": "買い手",
+		"Supplier": "売り手",
+		"Contact": "担当者"
 	}
 	
 }

@@ -65,8 +65,9 @@
 		"IssueDate": "Issue Date",
 		"Currency": "Currency",
 		"TaxInclusiveAmount" : "Tax Incl. Amount",
-		"Customer": "Customer",
-		"Supplier": "Supplier"
+		"Buyer": "Customer",
+		"Supplier": "Supplier",
+		"Contact": "Contact"
 	}
 	
 }
