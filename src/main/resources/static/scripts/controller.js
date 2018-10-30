@@ -99,7 +99,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 				createdBefore: "", 
 				createdAfter: "", 
 				processStates: [], 
-				limit: $scope.fetchLimit, 
+				limit: 100, 
 				page: 0,
 				tzOffset: getTzOffset()
 			};
@@ -215,7 +215,7 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 					createdBefore: param.createdBefore, 
 					createdAfter: param.createdAfter, 
 					processStates: param.processStates, 
-					limit: $scope.fetchLimit, 
+					limit: 100, 
 					page: page,
 					tzOffset: getTzOffset()
 			};
@@ -243,7 +243,11 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 			var pages = [];
 			retrieveInvoicePage($scope.queryParam, (response) => {
 				pages.push(response);
-				var numPages = response.numPages;
+				var numItems = response.itemsPerPage;
+				var numPages = $scope.fetchLimit / numItems;
+				if($scope.fetchLimit % numItems > 0) {
+					numPages = numPages + 1;
+				}
 				if(numPages > 1) {
 					var params = [];
 					for(var i = 1; i < numPages; i++) {
