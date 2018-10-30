@@ -90,7 +90,7 @@ public class InvoiceRetrievalServiceImpl implements InvoiceRetrievalService {
 		String url = builder.build().toString();
 		LOGGER.info(url);
 		
-		HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken();
+		HttpEntity<String> requestEntity = (HttpEntity<String>) tokenService.getRequestHttpEntityWithAccessToken(MediaType.APPLICATION_XML);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class, invoiceId);
 		Document document = getDocumentFromResponse(responseEntity);
