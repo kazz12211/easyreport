@@ -46,7 +46,7 @@
 		"Currency" : "通貨",
 		"IssueDate" : "発行日",
 		"State" : "ステータス",
-		"RecordsHit": "件がヒット",
+		"RecordsHit": "件が見つかりました",
 		"Selected": "件が選択中",
 		"Action": "アクション",
 		"Detail": "詳細"

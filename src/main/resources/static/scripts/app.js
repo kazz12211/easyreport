@@ -40,8 +40,8 @@ app.factory('$req', function($http, $location) {
 		searchInvoices : function(queryParams) {
 			return $http.get(url + "invoice/search", { params : queryParams } );
 		},
-		downloadInvoice: function(docId) {
-			return $http.get(url + "invoice/download", { params : {id : docId} });
+		downloadInvoice: function(docIds) {
+			return $http.post(url + "invoice/download", docIds);
 		},
 		loadInvoice: function(docId) {
 			return $http.get(url + "invoice/load", { params : {id : docId} });

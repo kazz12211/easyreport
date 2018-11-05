@@ -1,9 +1,6 @@
 package jp.tsubakicraft.easyreport.controllers;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -81,8 +78,8 @@ public class InvoiceController {
 		}
 	}
 
-	@RequestMapping(value = "/download", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<?> downloadInvoice(@RequestParam("id") String docId, final HttpServletResponse response) throws IOException, ParserConfigurationException, SAXException, JSONException {
+	@RequestMapping(value = "/download", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	public ResponseEntity<?> downloadInvoices(@RequestParam("id") String docId, final HttpServletResponse response) throws IOException, ParserConfigurationException, SAXException, JSONException {
 		if(tokenService.getAccessTokenFromContext() != null) {
 			try {
 				InvoiceDetailDTO invoice = invoiceRetrievalService.getInvoiceDetail(docId);
@@ -96,11 +93,6 @@ public class InvoiceController {
 			response.sendRedirect(tokenService.getAuthorizationCodeURL());
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
-		/*
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("requestedDocId", docId);
-		return new ResponseEntity(result, HttpStatus.NOT_IMPLEMENTED);
-		*/
 	}
 
 	@RequestMapping(value = "/load", method = RequestMethod.GET, produces = "application/json; charset=utf-8")

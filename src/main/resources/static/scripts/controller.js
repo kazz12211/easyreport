@@ -85,7 +85,6 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 
 			$scope.selectedRows = [];
 			$scope.invoiceTable.rows([]);
-			$scope.invoiceTable.pager({pages:0});
 			$scope.invoiceTable.status('');
 			$('#stateOptions option').prop('selected', false);
 			updateDownloadButton();
@@ -182,6 +181,11 @@ app.controller("invoiceController", ($scope, $http, $req, $q, $filter, $window, 
 		
 		
 		function download() {
+			var invoiceIds = [];
+			$scope.selectedRows.map(index => {
+				const invoice = $scope.invoices[index];
+				invoiceIds.push(invoice.documentId);
+			});
 		}
 		
 		function updateDownloadButton() {
